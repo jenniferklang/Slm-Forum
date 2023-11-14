@@ -1,50 +1,51 @@
 <template>
   <main>
-    <h1 class="text-h2 mb-12 text-center">Software Lifecycle Management</h1>
-    <CitiesList :receivedCities="cities" class="mb-12" />
-    <v-expansion-panels style="max-width: 600px" class="mx-auto">
-      <v-expansion-panel>
-        <v-expansion-panel-title>
-          <h3 class="text-h5">Lägg till stad</h3>
-        </v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <AddCityForm @city-added="onCityAdded" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <h1 class="text-3xl">Hello World!</h1>
+
+    <button class="btn btn-accent">Button</button>
+
+    <div class="w-96">
+      <div class="collapse bg-base-200">
+        <input type="radio" name="my-accordion-1" checked="checked" />
+        <div class="collapse-title text-xl font-medium">
+          Click to open this one and close others
+        </div>
+        <div class="collapse-content">
+          <p>hello</p>
+        </div>
+      </div>
+      <div class="collapse bg-base-200">
+        <input type="radio" name="my-accordion-1" />
+        <div class="collapse-title text-xl font-medium">
+          Click to open this one and close others
+        </div>
+        <div class="collapse-content">
+          <p>hello</p>
+        </div>
+      </div>
+      <div class="collapse bg-base-200">
+        <input type="radio" name="my-accordion-1" />
+        <div class="collapse-title text-xl font-medium">
+          Click to open this one and close others
+        </div>
+        <div class="collapse-content">
+          <p>hello</p>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
 <script>
-import CitiesList from './components/CitiesList.vue';
-import AddCityForm from './components/AddCityForm.vue';
-
 export default {
   name: 'App',
 
-  data: () => ({
-    cities: [],
-  }),
+  data: () => ({}),
 
-  watch: {
-    cities: {
-      handler() {
-        console.log('cities changed');
-        console.log(this.cities);
-      },
-      deep: true,
-    },
-  },
+  watch: {},
 
-  methods: {
-    onCityAdded(cities) {
-      this.cities = cities;
-    },
-  },
+  methods: {},
 
-  components: {
-    CitiesList,
-    AddCityForm,
-  },
+  components: {},
 };
 </script>
