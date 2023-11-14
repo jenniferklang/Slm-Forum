@@ -9,7 +9,11 @@ export default {
   data: () => ({
     string: 'Hello World!',
   }),
+
+  mounted() {
+    fetch('/api/auth')
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  },
 };
 </script>
-
-<style></style>

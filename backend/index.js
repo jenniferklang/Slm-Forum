@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Och säg till appen att använda dem här
-app.use('/auth', auth);
+app.use('/api/auth', auth);
 app.use('/api', api);
 
 // app.use(express.static(path.join(path.resolve(), 'dist')));
