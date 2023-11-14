@@ -1,13 +1,17 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: '/',
-    component: () => import('./pages/LoginRegisterPage.vue'),
+    path: "/",
+    component: () => import("./pages/LoginRegisterPage.vue"),
   },
   {
-    path: '/about',
-    component: () => import('./components/Text.vue'),
+    path: "/about",
+    component: () => import("./components/Text.vue"),
+  },
+  {
+    path: "/user",
+    component: () => import("./pages/UserSettings.vue"),
   },
 ];
 
