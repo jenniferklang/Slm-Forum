@@ -1,5 +1,7 @@
 <template>
-  <Text />
+  <div class="bg-base-200 h-[100vh]">
+    <Text />
+  </div>
 </template>
 
 <script>
