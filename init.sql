@@ -64,11 +64,10 @@ INSERT INTO users (name, mail, username, password, image_path) VALUES (
   NULL
 );
 
-INSERT INTO topics (title, created_by) VALUES (
+INSERT INTO topics (title, created_by) VALUES
   ('Hello World Topic', 1),
   ('Hello World Topic 2', 1),
-  ('Hello World Topic 3', 1)
-);
+  ('Hello World Topic 3', 1);
 
 INSERT INTO posts (content, created_by, topic) VALUES (
   'Hello World Content!',
