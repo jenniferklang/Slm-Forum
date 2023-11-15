@@ -4,14 +4,14 @@
 
 <script>
 export default {
-  name: 'Text',
+  name: "Text",
 
   data: () => ({
-    string: 'Hello World!',
+    string: "Hello World!",
   }),
 
   mounted() {
-    fetch('/api/auth')
+    fetch("/api")
       .then((response) => response.json())
       .then((data) => console.log(data));
   },

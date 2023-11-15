@@ -1,16 +1,17 @@
 <template>
-  <div class="bg-base-200 h-[100vh]">
-    <Text />
+  <div class="h-[100vh] flex justify-center items-center">
+    <Card />
   </div>
 </template>
 
 <script>
-import Text from '../components/Text.vue';
+import Card from '../components/LoginRegisterCard.vue';
+
 export default {
   name: 'LoginRegisterPage',
 
   components: {
-    Text,
+    Card,
   },
 };
 </script>
