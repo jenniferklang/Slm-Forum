@@ -12,6 +12,10 @@ const routes = [
     component: () => import('./components/Text.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/user',
+    component: () => import('./pages/UserSettings.vue'),
+  },
 ];
 
 const router = createRouter({
