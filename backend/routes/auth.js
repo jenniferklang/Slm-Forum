@@ -22,7 +22,7 @@ router.get('/', async (_request, response) => {
 router.post('/register', async (req, res) => {
   try {
     const { name, username, mail, password } = req.body;
-    console.log('req.body: ', req.body);
+
     const existingUser = await client.query(
       'SELECT * FROM users WHERE username = $1 OR mail = $2',
       [username, mail]
@@ -47,6 +47,7 @@ router.post('/register', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
+
     res.cookie('token', token, { httpOnly: true });
     res.status(201).json({ token });
   } catch (err) {
@@ -90,4 +91,5 @@ router.post('/login', async (req, res) => {
 router.post('/validate', async (req, res) => {
   checkToken(req, res);
 });
+
 module.exports = router;

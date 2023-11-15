@@ -17,7 +17,7 @@ const routes = [
     component: () => import('./pages/UserSettings.vue'),
   },
   {
-    path: '/privacy',
+    path: '/policy',
     component: () => import('./pages/PrivacyPolicy.vue'),
   },
 ];

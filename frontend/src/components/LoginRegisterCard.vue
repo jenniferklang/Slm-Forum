@@ -1,5 +1,5 @@
 <template>
-  <div class="card w-4/12 bg-base-100 min-w-[22rem] shadow-xl">
+  <div class="card w-4/12 bg-base-200 min-w-[22rem] shadow-xl">
     <figure>
       <!-- <img
         src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
@@ -9,14 +9,14 @@
       <div class="diff aspect-[16/9]">
         <div class="diff-item-1">
           <div
-            class="bg-primary text-base-100 text-9xl font-black grid place-content-center"
+            class="bg-primary text-base-200 text-9xl font-black grid place-content-center"
           >
             SLM
           </div>
         </div>
         <div class="diff-item-2">
           <div
-            class="bg-base-100 text-9xl font-black grid place-content-center"
+            class="bg-base-200 text-9xl font-black grid place-content-center"
           >
             SLM
           </div>
@@ -24,7 +24,7 @@
         <div class="diff-resizer"></div>
       </div>
     </figure>
-    <div class="card-body h-[45vh]">
+    <div class="card-body h-[50vh]">
       <div class="tabs tabs-bordered self-center">
         <input
           type="radio"
@@ -87,18 +87,24 @@
                 v-model="registerPassword"
                 class="input w-full max-w-xs bg-white"
               />
-
-              <button type="submit" class="btn btn-primary">Logga in</button>
+              <label class="label cursor-pointer">
+                <input
+                  type="checkbox"
+                  class="checkbox mr-5"
+                  v-model="privacyChecked"
+                />
+                <span class="label-text max-w-[16rem]"
+                  >Jag godkänner att ni hanterar min data i enlighet med
+                  <router-link to="/policy"
+                    >integritetsskyddspolicyn</router-link
+                  ></span
+                >
+              </label>
+              <button type="submit" class="btn btn-primary">Registrera</button>
             </form>
           </div>
         </div>
       </div>
-      <!-- <p>
-        Message is: {{ registerName }} {{ registerEmail }}
-        {{ registerPassword }} {{ registerUsername }} {{ loginUsername }}
-        {{ loginPassword }}
-      </p> -->
-      <div class="card-actions justify-end"></div>
     </div>
   </div>
 </template>
