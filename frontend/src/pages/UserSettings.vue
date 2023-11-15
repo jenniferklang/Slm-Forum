@@ -1,14 +1,13 @@
 <script setup>
 import UserInfo from "../components/UserInfo.vue";
 import { ref } from "vue";
+import axios from "axios";
 
 let user = ref[null];
 
-fetch("/api")
-  .then((response) => response.json())
-  .then((result) => {
-    user = result;
-  });
+axios.get("/api", {}, { withCredentials: true }).then(function (response) {
+  user = response;
+});
 
 console.log(user);
 defineProps({
