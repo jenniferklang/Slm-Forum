@@ -16,6 +16,10 @@ const routes = [
     path: '/user',
     component: () => import('./pages/UserSettings.vue'),
   },
+  {
+    path: '/privacy',
+    component: () => import('./pages/PrivacyPolicy.vue'),
+  },
 ];
 
 const router = createRouter({
