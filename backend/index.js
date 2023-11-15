@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 // Importera routes här
 const auth = require('./routes/auth');
 const api = require('./routes/api');
+const postTopics = require('./routes/postTopics');
 
 const port = process.env.PORT || 3000;
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 // Och säg till appen att använda dem här
 app.use('/api/auth', auth);
 app.use('/api', api);
+app.use('/api/postTopics', postTopics);
 
 // app.use(express.static(path.join(path.resolve(), 'dist')));
 
