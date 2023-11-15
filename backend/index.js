@@ -1,13 +1,13 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const { authenticateToken } = require('./middlewares/auth');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const { authenticateToken } = require("./middlewares/auth");
 // const path = require('path');
 
 // Importera routes här
-const auth = require('./routes/auth');
-const api = require('./routes/api');
-const postTopics = require('./routes/postTopics');
+const auth = require("./routes/auth");
+const api = require("./routes/api");
+const postTopics = require("./routes/postTopics");
 
 const port = process.env.PORT || 3000;
 
@@ -18,9 +18,12 @@ app.use(cookieParser());
 app.use(authenticateToken);
 
 // Och säg till appen att använda dem här
-app.use('/api/auth', auth);
-app.use('/api', api);
-app.use('/api/postTopics', postTopics);
+app.use("/api/auth", auth);
+app.use("/api", api);
+app.use("/api/postTopics", postTopics);
+app.use("/api/forum", forum);
+
+// app.use(express.static(path.join(path.resolve(), 'dist')));
 
 app.listen(port, () => {
   console.log(`Redo på ${port}`);
