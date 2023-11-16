@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { Client } = require('pg');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { checkToken } = require('../middlewares/auth');
 const dotenv = require('dotenv');
 dotenv.config();
 
 const client = new Client({
-  connectionString: process.env.PGURI_DEV,
+  connectionString: process.env.PGURI,
 });
 client.connect();
 
@@ -36,6 +36,7 @@ router.post('/register', async (req, res) => {
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // const hashedPassword = password;
 
     const newUser = await client.query(
       'INSERT INTO users (username, mail, password, name) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -74,6 +75,11 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Fel lösenord.' });
     }
 
+    const getUser = await client.query(
+      'SELECT * FROM users WHERE username = $1',
+      [username]
+    );
+
     const token = jwt.sign(
       { userId: user.rows[0].id },
       process.env.JWT_SECRET,
@@ -81,7 +87,7 @@ router.post('/login', async (req, res) => {
     );
 
     res.cookie('token', token, { httpOnly: true });
-    res.status(200).json({ token });
+    res.status(200).json({ token, user: getUser.rows[0] });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: 'Serverfel' });

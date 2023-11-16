@@ -1,13 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const cors = require('cors');
 const { authenticateToken } = require('./middlewares/auth');
-// const path = require('path');
-
-// Importera routes här
-const auth = require('./routes/auth');
-const api = require('./routes/api');
-const postTopics = require('./routes/postTopics');
+const { initializeSocketIO } = require('./modules/socketio');
 
 const port = process.env.PORT || 3000;
 
@@ -15,13 +12,23 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors());
 app.use(authenticateToken);
 
-// Och säg till appen att använda dem här
+const auth = require('./routes/auth');
+const api = require('./routes/api');
+const postTopics = require('./routes/postTopics');
+
 app.use('/api/auth', auth);
 app.use('/api', api);
 app.use('/api/postTopics', postTopics);
 
-app.listen(port, () => {
-  console.log(`Redo på ${port}`);
+const server = http.createServer(app);
+const io = initializeSocketIO(server);
+io.on('error', (error) => {
+  console.error('Socket.IO Error:', error);
+});
+
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });

@@ -1,17 +1,26 @@
 services:
   backend:
-    build: backend
+    build:
+      context: ./backend
+    networks:
+      - slm-network
     depends_on:
       database:
         condition: service_healthy
     environment:
       - PGURI=${PGURI}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - '3000:3000'
+    # volumes:
+    #   - ./backend:/app
+    #   - /app/node_modules
 
   database:
     environment:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
+    networks:
+      - slm-network
     healthcheck:
       interval: 1s
       test: 'pg_isready --username=postgres'
@@ -23,8 +32,14 @@ services:
 
   frontend:
     build:
-      context: frontend
+      context: ./frontend
+    networks:
+      - slm-network
     depends_on:
       - backend
     ports:
       - '80:80'
+
+networks:
+  slm-network:
+    driver: bridge
