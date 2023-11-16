@@ -11,7 +11,7 @@ services:
         condition: service_healthy
     environment:
       - PGURI=${PGURI}
-      # - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - '3000:3000'
     # volumes:
@@ -26,7 +26,8 @@ services:
     # networks:
     #   - slm-network
     healthcheck:
-      interval: 1s
+      interval: 5s
+      timeout: 10s
       test: 'pg_isready --username=postgres'
     image: postgres
     ports:

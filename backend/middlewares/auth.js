@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken')
+const dotenv = require("dotenv");
+dotenv.config();
 
 const authenticateToken = (req, res, next) => {
   const publicRoutes = [
@@ -10,7 +12,7 @@ const authenticateToken = (req, res, next) => {
     '/socketchat/',
   ]
 
-  console.log('authenticateToken:' + req.path)
+  console.log(process.env.JWT_SECRET)
 
   if (publicRoutes.includes(req.path)) {
     return next()
@@ -22,6 +24,7 @@ const authenticateToken = (req, res, next) => {
   if (!token) return res.status(401).send('Åtkomst nekad.')
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    console.error('JWT Verification Error:', err);
     if (err) return res.status(403).send('Åtkomst nekad. Fel token.')
 
     req.userId = decoded.userId

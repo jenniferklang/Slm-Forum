@@ -7,9 +7,7 @@ export const state = reactive({
   messages: [],
 });
 
-export const socket = io('http://localhost:3000', {
-  path: '/socketchat',
-});
+export const socket = io({ path: '/socketchat'});
 
 socket.on('connect', () => {
   state.connected = true;
