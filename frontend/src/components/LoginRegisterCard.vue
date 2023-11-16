@@ -138,7 +138,7 @@ export default {
           { withCredentials: true }
         )
         .then((response) => {
-          console.log(response);
+          console.log(response.data.user);
           sessionStorage.setItem('jwt', response.data.token);
         })
         .then(() => {
