@@ -4,12 +4,14 @@ services:
       context: ./backend
     # networks:
     #   - slm-network
+    # networks:
+    #   - slm-network
     depends_on:
       database:
         condition: service_healthy
     environment:
       - PGURI=${PGURI}
-      - JWT_SECRET=${JWT_SECRET}
+      # - JWT_SECRET=${JWT_SECRET}
     ports:
       - '3000:3000'
     # volumes:
@@ -19,6 +21,8 @@ services:
   database:
     environment:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
+    # networks:
+    #   - slm-network
     # networks:
     #   - slm-network
     healthcheck:
@@ -35,10 +39,16 @@ services:
       context: ./frontend
     # networks:
     #   - slm-network
+    # networks:
+    #   - slm-network
     depends_on:
       - backend
     ports:
       - '80:80'
+# networks:
+#   slm-network:
+#     driver: bridge
+
 # networks:
 #   slm-network:
 #     driver: bridge

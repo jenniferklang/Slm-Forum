@@ -27,6 +27,11 @@ const routes = [
   {
     path: '/forum',
     component: () => import('./pages/ForumPage.vue'),
+    //meta: { requiresAuth: true },
+  },
+  {
+    path: '/chat',
+    component: () => import('./pages/Chat.vue'),
   },
 ];
 

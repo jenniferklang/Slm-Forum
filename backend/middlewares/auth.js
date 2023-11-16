@@ -5,6 +5,7 @@ const authenticateToken = (req, res, next) => {
     '/api/auth/register',
     '/api/auth/login',
     '/api/auth/validate',
+    '/api/forum',
     '/_next/webpack-hmr',
   ];
 
