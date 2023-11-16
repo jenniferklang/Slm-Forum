@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const client = new Client({
-  connectionString: process.env.PGURI_DEV,
+  connectionString: process.env.PGURI,
 });
 client.connect();
 

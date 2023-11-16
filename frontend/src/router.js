@@ -19,6 +19,8 @@ const routes = [
   {
     path: "/policy",
     component: () => import("./pages/PrivacyPolicy.vue"),
+  },
+  {
     path: "/about",
     component: () => import("./components/Text.vue"),
   },
@@ -26,6 +28,10 @@ const routes = [
     path: "/forum",
     component: () => import("./pages/ForumPage.vue"),
     //meta: { requiresAuth: true },
+  },
+  {
+    path: "/chat",
+    component: () => import("./pages/Chat.vue"),
   },
 ];
 

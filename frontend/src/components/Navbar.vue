@@ -25,7 +25,7 @@
           <li>
             <router-link to="/home">Hem</router-link>
           </li>
-          <li><router-link to="/chat">Chat</router-link></li>
+          <!-- <li><router-link to="/chat">Chat</router-link></li> -->
           <li><router-link to="/user">Inställningar</router-link></li>
         </ul>
       </div>

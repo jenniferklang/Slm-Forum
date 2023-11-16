@@ -7,6 +7,7 @@ const authenticateToken = (req, res, next) => {
     "/api/auth/validate",
     "/api/forum",
   ];
+
   if (publicRoutes.includes(req.path)) {
     return next();
   }
