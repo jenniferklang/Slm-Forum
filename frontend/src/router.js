@@ -25,6 +25,7 @@ const routes = [
   {
     path: "/forum",
     component: () => import("./pages/ForumPage.vue"),
+    //meta: { requiresAuth: true },
   },
 ];
 

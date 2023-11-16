@@ -8,6 +8,7 @@ const { authenticateToken } = require("./middlewares/auth");
 const auth = require("./routes/auth");
 const api = require("./routes/api");
 const postTopics = require("./routes/postTopics");
+const forum = require("./routes/forum");
 
 const port = process.env.PORT || 3000;
 
