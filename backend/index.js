@@ -39,14 +39,15 @@ const io = socketIO(
 )
 
 io.on('connection', (socket) => {
-  console.log('User connected')
+  console.log('User connected:', socket.id)
 
   socket.on('disconnect', () => {
-    console.log('User disconnected')
+    console.log('User disconnected:', socket.id)
   })
 
   socket.on('chat message', (msg) => {
     console.log('Received message:', msg)
+    msg.socketId = socket.id
     io.emit('chat message', msg)
   })
 })
