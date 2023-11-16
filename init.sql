@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS comments (
   post INTEGER NOT NULL,
   FOREIGN KEY (created_by) REFERENCES users(user_id),
   FOREIGN KEY (post) REFERENCES posts(post_id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS userTopics (
   user_id INTEGER NOT NULL,
@@ -65,7 +65,7 @@ INSERT INTO comments (content, created_by, post) VALUES (
   'Hello World!',
   1,
   1
-)
+);
 
 INSERT INTO userTopics (user_id, topic_id) VALUES (
   1,

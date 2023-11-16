@@ -25,13 +25,11 @@ export default {
   computed() {},
   mounted() {
     // Anslut till Socket.IO-servern
+    this.socket = io({ path: '/socketchat' });
+
     this.socket = io('http://localhost:3000', {
       path: '/socketchat',
     });
-
-    // this.socket = io('/socket', {
-    //   path: '/socketchat',
-    // });
 
     // När du är ansluten loggas det ut.
     this.socket.on('connect', () => {
