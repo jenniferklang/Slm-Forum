@@ -2,8 +2,8 @@ services:
   backend:
     build:
       context: ./backend
-    networks:
-      - slm-network
+    # networks:
+    #   - slm-network
     depends_on:
       database:
         condition: service_healthy
@@ -19,8 +19,8 @@ services:
   database:
     environment:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
-    networks:
-      - slm-network
+    # networks:
+    #   - slm-network
     healthcheck:
       interval: 1s
       test: 'pg_isready --username=postgres'
@@ -33,13 +33,12 @@ services:
   frontend:
     build:
       context: ./frontend
-    networks:
-      - slm-network
+    # networks:
+    #   - slm-network
     depends_on:
       - backend
     ports:
       - '80:80'
-
-networks:
-  slm-network:
-    driver: bridge
+# networks:
+#   slm-network:
+#     driver: bridge

@@ -18,6 +18,7 @@ app.use(authenticateToken);
 const auth = require('./routes/auth');
 const api = require('./routes/api');
 const postTopics = require('./routes/postTopics');
+const forum = require('./routes/forum');
 
 app.use('/api/auth', auth);
 app.use('/api', api);
