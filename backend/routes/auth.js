@@ -12,13 +12,6 @@ const client = new Client({
 })
 client.connect()
 
-router.get('/', async (_request, response) => {
-  console.log('Get request')
-  const { rows } = await client.query('SELECT * FROM topics;', [])
-
-  response.send(rows)
-})
-
 router.post('/register', async (req, res) => {
   try {
     const { name, username, mail, password } = req.body
@@ -36,21 +29,13 @@ router.post('/register', async (req, res) => {
 
     const saltRounds = 10
     const hashedPassword = await bcrypt.hash(password, saltRounds)
-    // const hashedPassword = password;
 
     const newUser = await client.query(
       'INSERT INTO users (username, mail, password, name) VALUES ($1, $2, $3, $4) RETURNING *',
       [username, mail, hashedPassword, name]
     )
 
-    const token = jwt.sign(
-      { userId: newUser.rows[0].id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    )
-
-    res.cookie('token', token, { httpOnly: true })
-    res.status(201).json({ token })
+    res.status(201).json({ message: 'Användare registrerad.' })
   } catch (err) {
     console.error(err.message)
     res.status(500).json({ message: 'Serverfel' })
@@ -75,19 +60,16 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Fel lösenord.' })
     }
 
-    const getUser = await client.query(
-      'SELECT * FROM users WHERE username = $1',
-      [username]
-    )
-
     const token = jwt.sign(
-      { userId: user.rows[0].id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      {
+        userId: user.rows[0].user_id,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      },
+      process.env.JWT_SECRET
     )
 
     res.cookie('token', token, { httpOnly: true })
-    res.status(200).json({ token, user: getUser.rows[0] })
+    res.status(200).json({ token, user: user.rows[0] })
   } catch (err) {
     console.error(err.message)
     res.status(500).json({ message: 'Serverfel' })

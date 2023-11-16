@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import axios from 'axios'
+import { createRouter, createWebHistory } from 'vue-router';
+import axios from 'axios';
 
 const routes = [
   {
@@ -19,53 +19,57 @@ const routes = [
   {
     path: '/policy',
     component: () => import('./pages/PrivacyPolicy.vue'),
+  },
+  {
     path: '/about',
     component: () => import('./components/Text.vue'),
   },
   {
     path: '/forum',
     component: () => import('./pages/ForumPage.vue'),
+    //meta: { requiresAuth: true },
   },
   {
     path: '/chat',
     component: () => import('./pages/Chat.vue'),
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
 
 router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth) {
-    const isTokenValid = await checkToken()
-    console.log('isTokenValid: ', isTokenValid)
+    const isTokenValid = await checkToken();
+    console.log('isTokenValid: ', isTokenValid);
     if (isTokenValid) {
-      next()
+      next();
     } else {
-      next('/')
+      next('/');
     }
   } else {
-    next()
+    next();
   }
-})
+});
 
 async function checkToken() {
-  const token = sessionStorage.getItem('jwt')
+  const token = sessionStorage.getItem('jwt');
 
   if (!token) {
-    return false
+    return false;
   }
 
   try {
-    const response = await axios.post('/api/auth/validate', { token })
-    console.log('Validate JWT response: ', response)
-    return response.data.valid
+    const response = await axios.post('/api/auth/validate', { token });
+    console.log('Validate JWT response: ', response.data);
+    sessionStorage.setItem('user_id', response.data.userId);
+    return response.data.valid;
   } catch (err) {
-    console.error(err)
-    return false
+    console.error(err);
+    return false;
   }
 }
 
-export default router
+export default router;

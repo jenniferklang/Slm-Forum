@@ -1,11 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-const socketIO = require('socket.io')
-// const http = require('http')
+const http = require('http')
 const cors = require('cors')
 const { authenticateToken } = require('./middlewares/auth')
-// const { initializeSocketIO } = require('./modules/socketio');
+const { initializeSocketIO } = require('./modules/socketio')
 
 const port = process.env.PORT || 3000
 
@@ -26,28 +25,31 @@ app.use('/api', api)
 app.use('/api/postTopics', postTopics)
 app.use('/api/forum', forum)
 
-// const server = http.createServer(app);
-// const io = initializeSocketIO(server);
-// io.on('error', (error) => {
-//   console.error('Socket.IO Error:', error);
-// });
-
-const io = socketIO(
-  app.listen(port, () => {
-    console.log(`Ready on ${port}`)
-  })
-)
-
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id)
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id)
-  })
-
-  socket.on('chat message', (msg) => {
-    console.log('Received message:', msg)
-    msg.socketId = socket.id
-    io.emit('chat message', msg)
-  })
+const server = http.createServer(app)
+const io = initializeSocketIO(server)
+io.on('error', (error) => {
+  console.error('Socket.IO Error:', error)
 })
+
+server.listen(port, () => {
+  console.log(`Ready on ${port}`)
+})
+
+// const io = socketIO(
+//   app.listen(port, () => {
+//     console.log(`Ready on ${port}`);
+//   })
+// );
+
+// io.on("connection", (socket) => {
+//   console.log("User connected");
+
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected");
+//   });
+
+//   socket.on("chat message", (msg) => {
+//     console.log("Received message:", msg);
+//     io.emit("chat message", msg);
+//   });
+// });

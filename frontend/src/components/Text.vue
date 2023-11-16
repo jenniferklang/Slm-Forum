@@ -22,6 +22,7 @@ export default {
       newMessage: '',
     };
   },
+  computed() {},
   mounted() {
     // Anslut till Socket.IO-servern
     this.socket = io('http://localhost:3000', {
