@@ -5,25 +5,28 @@ const authenticateToken = (req, res, next) => {
     '/api/auth/register',
     '/api/auth/login',
     '/api/auth/validate',
+    '/_next/webpack-hmr',
   ];
 
   if (publicRoutes.includes(req.path)) {
     return next();
   }
+  console.log('authenticateToken:' + req.path);
 
   const token = req.cookies.token;
 
   if (!token) return res.status(401).send('Åtkomst nekad.');
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(403).send('Åtkomst nekad. Fel token.');
 
-    req.user = user;
+    req.userId = decoded.userId;
+
     next();
   });
 };
 
-const checkToken = (req, res) => {
+const checkToken = async (req, res) => {
   const { token } = req.body;
 
   if (!token) {
@@ -32,13 +35,17 @@ const checkToken = (req, res) => {
       .json({ message: 'Åtkomst nekad. Inget token.', valid: false });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err)
       return res
         .status(403)
         .json({ message: 'Åtkomst nekad. Fel token.', valid: false });
 
-    res.status(200).json({ message: 'Token validerad.', user, valid: true });
+    res.status(200).json({
+      message: 'Token validerad.',
+      valid: true,
+      userId: decoded.userId,
+    });
   });
 };
 

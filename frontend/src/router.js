@@ -1,30 +1,32 @@
-import { createRouter, createWebHistory } from "vue-router";
-import axios from "axios";
+import { createRouter, createWebHistory } from 'vue-router';
+import axios from 'axios';
 
 const routes = [
   {
-    path: "/",
-    component: () => import("./pages/LoginRegisterPage.vue"),
+    path: '/',
+    component: () => import('./pages/LoginRegisterPage.vue'),
   },
   {
-    name: "home",
-    path: "/home",
-    component: () => import("./components/Text.vue"),
+    name: 'home',
+    path: '/home',
+    component: () => import('./components/Text.vue'),
     meta: { requiresAuth: true },
   },
   {
-    path: "/user",
-    component: () => import("./pages/UserSettings.vue"),
+    path: '/user',
+    component: () => import('./pages/UserSettings.vue'),
   },
   {
-    path: "/policy",
-    component: () => import("./pages/PrivacyPolicy.vue"),
-    path: "/about",
-    component: () => import("./components/Text.vue"),
+    path: '/policy',
+    component: () => import('./pages/PrivacyPolicy.vue'),
   },
   {
-    path: "/forum",
-    component: () => import("./pages/ForumPage.vue"),
+    path: '/about',
+    component: () => import('./components/Text.vue'),
+  },
+  {
+    path: '/forum',
+    component: () => import('./pages/ForumPage.vue'),
   },
 ];
 
@@ -36,11 +38,11 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth) {
     const isTokenValid = await checkToken();
-    console.log("isTokenValid: ", isTokenValid);
+    console.log('isTokenValid: ', isTokenValid);
     if (isTokenValid) {
       next();
     } else {
-      next("/");
+      next('/');
     }
   } else {
     next();
@@ -48,15 +50,16 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function checkToken() {
-  const token = sessionStorage.getItem("jwt");
+  const token = sessionStorage.getItem('jwt');
 
   if (!token) {
     return false;
   }
 
   try {
-    const response = await axios.post("/api/auth/validate", { token });
-    console.log("Validate JWT response: ", response);
+    const response = await axios.post('/api/auth/validate', { token });
+    console.log('Validate JWT response: ', response.data);
+    sessionStorage.setItem('user_id', response.data.userId);
     return response.data.valid;
   } catch (err) {
     console.error(err);
