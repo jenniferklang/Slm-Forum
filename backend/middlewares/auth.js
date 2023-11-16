@@ -7,7 +7,10 @@ const authenticateToken = (req, res, next) => {
     '/api/auth/validate',
     '/api/forum',
     '/_next/webpack-hmr',
+    '/socketchat/',
   ];
+
+  console.log('authenticateToken:' + req.path);
 
   if (publicRoutes.includes(req.path)) {
     return next();
