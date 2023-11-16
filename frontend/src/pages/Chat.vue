@@ -34,12 +34,13 @@
 </template>
 
 <script>
-import socket from '../socket'
+import io from 'socket.io-client'
 import moment from 'moment'
 
 export default {
   data() {
     return {
+      socket: null,
       message: '',
       messages: [],
       currentUserSocketId: '',
@@ -47,8 +48,11 @@ export default {
   },
 
   mounted() {
+    this.socket = io('http://localhost:3000', {
+      path: '/socketchat',
+    })
     console.log('Component mounted')
-    socket.on('chat message', (msg) => {
+    this.socket.on('chat message', (msg) => {
       console.log('Received message:', msg)
       this.messages.push(msg)
     })
@@ -62,12 +66,12 @@ export default {
     sendMessage() {
       console.log('Sending message:', this.message)
       if (this.message.trim() !== '') {
-        socket.emit('chat message', {
+        this.socket.emit('chat message', {
           message: this.message,
           username: 'Fast värde', // Replace with the actual username
           timestamp: new Date(), // Use the current timestamp
           status: 'Delivered', // Set the initial status
-          senderSocketId: socket.id,
+          senderSocketId: this.socket.id,
         })
         this.message = ''
       }
