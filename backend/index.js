@@ -22,6 +22,7 @@ const postTopics = require('./routes/postTopics');
 app.use('/api/auth', auth);
 app.use('/api', api);
 app.use('/api/postTopics', postTopics);
+app.use('/api/forum', forum);
 
 const server = http.createServer(app);
 const io = initializeSocketIO(server);

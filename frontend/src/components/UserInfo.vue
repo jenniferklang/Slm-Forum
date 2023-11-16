@@ -9,6 +9,7 @@
         type="text"
         :placeholder="placeholder"
         class="input input-bordered max-w-xs h-14"
+        disabled
       />
       <div class="flex flex-col">
         <div class="badge badge-neutral btn-xs m-0.5 w-full">Change</div>

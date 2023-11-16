@@ -56,14 +56,14 @@
         </g>
       </svg>
       <p class="font-bold">Software Lifecycle Management</p>
-      <p class="font-medium">Jaako, Johan, Jennifer, Roland och Viktor</p>
+      <p class="font-medium">Jaakko, Johan, Jennifer, Roland och Viktor</p>
     </aside>
   </footer>
 </template>
 
 <script>
 export default {
-  name: 'Footer',
+  name: "Footer",
 };
 </script>
 
