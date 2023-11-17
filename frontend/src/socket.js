@@ -1,13 +1,37 @@
-import { io } from 'socket.io-client'
+import { reactive } from 'vue';
+import { io } from 'socket.io-client';
 
-const socket = io('/')
+export const state = reactive({
+  connected: false,
+  users: [],
+  messages: [],
+});
+
+// TA INTE BORT - BEHÖVS FÖR ATT KUNNA KÖRA VID PRODUKTION
+// export const socket = io({ path: '/socketchat'});
+
+export const socket = io('http://localhost:3000', {
+  path: '/socketchat',
+});
 
 socket.on('connect', () => {
-  console.log('Connected to server')
-})
+  state.connected = true;
+  console.log('Connected to socket.io server');
+});
 
 socket.on('disconnect', () => {
-  console.log('Disconnected from server')
-})
+  state.connected = false;
+});
 
-export default socket
+socket.on('new user', (args) => {
+  console.log('Other user connected to chat: ', args);
+});
+
+socket.on('chat message', (msg) => {
+  console.log('Received message:', msg);
+  state.messages.push(msg);
+});
+
+// socket.on('bar', (...args) => {
+//   state.barEvents.push(args);
+// });

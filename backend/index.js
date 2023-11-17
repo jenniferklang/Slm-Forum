@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const socketIO = require("socket.io");
 const http = require("http");
 const cors = require("cors");
 const { authenticateToken } = require("./middlewares/auth");
@@ -30,6 +29,10 @@ const server = http.createServer(app);
 const io = initializeSocketIO(server);
 io.on("error", (error) => {
   console.error("Socket.IO Error:", error);
+});
+
+server.listen(port, () => {
+  console.log(`Ready on ${port}`);
 });
 
 server.listen(port, () => {
