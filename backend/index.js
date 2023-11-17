@@ -16,14 +16,14 @@ app.use(cors());
 app.use(authenticateToken);
 
 const auth = require('./routes/auth');
-const api = require('./routes/api');
 const postTopics = require('./routes/postTopics');
 const forum = require('./routes/forum');
+const api = require('./routes/api');
 
 app.use('/api/auth', auth);
-app.use('/api', api);
 app.use('/api/postTopics', postTopics);
 app.use('/api/forum', forum);
+app.use('/api', api);
 
 const server = http.createServer(app);
 const io = initializeSocketIO(server);

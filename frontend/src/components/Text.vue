@@ -13,6 +13,7 @@
 
 <script>
 import io from 'socket.io-client';
+import axios from 'axios';
 
 export default {
   data() {
@@ -24,8 +25,10 @@ export default {
   },
   computed() {},
   mounted() {
-    // Anslut till Socket.IO-servern
-    this.socket = io({ path: '/socketchat' });
+    this.getUser(sessionStorage.getItem('user_id'));
+
+    // PRODUKTION
+    // this.socket = io({ path: '/socketchat' });
 
     this.socket = io('http://localhost:3000', {
       path: '/socketchat',
@@ -54,6 +57,16 @@ export default {
         id: Date.now(),
       });
       this.newMessage = '';
+    },
+
+    getUser(id) {
+      axios
+        .post('/api', {
+          user_id: id,
+        })
+        .then((response) => {
+          console.log(response.data);
+        });
     },
   },
   beforeUnmount() {
