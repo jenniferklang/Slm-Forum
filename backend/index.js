@@ -1,10 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const http = require('http');
-const cors = require('cors');
-const { authenticateToken } = require('./middlewares/auth');
-const { initializeSocketIO } = require('./modules/socketio');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const http = require("http");
+const cors = require("cors");
+const { authenticateToken } = require("./middlewares/auth");
+const { initializeSocketIO } = require("./modules/socketio");
 
 const port = process.env.PORT || 3000;
 
@@ -15,7 +15,6 @@ app.use(cookieParser());
 app.use(cors());
 app.use(authenticateToken);
 
-<<<<<<< HEAD
 const auth = require("./routes/auth");
 const api = require("./routes/api");
 const postTopics = require("./routes/postTopics");
@@ -27,22 +26,11 @@ app.use("/api", api);
 app.use("/api/postTopics", postTopics);
 app.use("/api/forum", forum);
 app.use("/api/user", user);
-=======
-const auth = require('./routes/auth');
-const postTopics = require('./routes/postTopics');
-const forum = require('./routes/forum');
-const api = require('./routes/api');
-
-app.use('/api/auth', auth);
-app.use('/api/postTopics', postTopics);
-app.use('/api/forum', forum);
-app.use('/api', api);
->>>>>>> d8bc627dee1582696b238cb80e9b1bdd436d9ac3
 
 const server = http.createServer(app);
 const io = initializeSocketIO(server);
-io.on('error', (error) => {
-  console.error('Socket.IO Error:', error);
+io.on("error", (error) => {
+  console.error("Socket.IO Error:", error);
 });
 
 server.listen(port, () => {
