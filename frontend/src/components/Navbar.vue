@@ -26,6 +26,10 @@
             <router-link to="/home">Hem</router-link>
           </li>
           <!-- <li><router-link to="/chat">Chat</router-link></li> -->
+          <li><router-link to="/forum">Forum</router-link></li>
+          <li><router-link to="/chat">Chat</router-link></li>
+          <li><router-link to="/policy">Privacy</router-link></li>
+          <li><router-link to="/about">Om</router-link></li>
           <li><router-link to="/user">Inställningar</router-link></li>
         </ul>
       </div>
