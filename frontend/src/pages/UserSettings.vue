@@ -1,15 +1,10 @@
 <script setup>
 import UserInfo from "../components/UserInfo.vue";
-import { ref } from "vue";
-import axios from "axios";
+import { useActiveUser } from "/stores/userStore";
+const store = useActiveUser();
 
-let user = ref[null];
+console.log(store);
 
-axios.get("/api", {}, { withCredentials: true }).then(function (response) {
-  user = response;
-});
-
-console.log(user);
 defineProps({
   label: String,
   placeholder: String,
@@ -31,5 +26,10 @@ defineProps({
       <UserInfo label="Username" placeholder="johndoe" />
       <UserInfo label="Password" placeholder="user[0].title" />
     </div>
+    <p>Name: {{ store.userName }}</p>
+    <p>Real Name: {{ store.userRealName }}</p>
+    <p>User Id: {{ store.userId }}</p>
+    <p>Email: {{ store.userMail }}</p>
+    <p>Image url: {{ store.userImage }}</p>
   </div>
 </template>
