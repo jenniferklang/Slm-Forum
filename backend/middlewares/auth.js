@@ -10,8 +10,6 @@ const authenticateToken = (req, res, next) => {
     '/socketchat/',
   ]
 
-  console.log('authenticateToken:' + req.path)
-
   if (publicRoutes.includes(req.path)) {
     return next()
   }
