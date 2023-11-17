@@ -35,10 +35,6 @@ server.listen(port, () => {
   console.log(`Ready on ${port}`);
 });
 
-server.listen(port, () => {
-  console.log(`${port} aktiv`);
-});
-
 // const io = socketIO(
 //   app.listen(port, () => {
 //     console.log(`Ready on ${port}`);
