@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="overflow-x-auto">
-      <div
-        class="hero min-h-screen"
-        style="
-          background-image: url(https://images.pexels.com/photos/1309766/pexels-photo-1309766.jpeg?auto=compress&cs=tinysrgb&w=400);
-        "
-      >
+      <div class="hero min-h-screen" :style="heroStyle">
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
@@ -15,7 +10,6 @@
               The ultimate destination for meaningful conversations and vibrant
               discussions!
             </p>
-            <p></p>
             <p>Ready to share? Let's talk!</p>
           </div>
         </div>
@@ -40,29 +34,41 @@
         </thead>
         <tbody>
           <tr v-for="(topic, index) in paginatedTopics" :key="topic.id">
-            <th>{{ (currentPage - 1) * itemsPerPage + index + 1 }}</th>
+            <th>{{ calculateTopicNumber(index) }}</th>
             <td>{{ topic.title }}</td>
-            <td v-if="topic.post">{{ topic.post.content }}</td>
-            <td v-else>No content available</td>
-            <td>{{ topic.created_at }}</td>
+            <td>{{ topicContent(topic) }}</td>
+            <td>{{ formatDate(topic.created_at) }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="pagination-container">
-      <button class="btn" @click="goToPage(currentPage - 1)">Previous</button>
+      <button
+        class="btn"
+        @click="goToPage(currentPage - 1)"
+        :disabled="currentPage === 1"
+      >
+        Previous
+      </button>
       <div class="pagination-center">
         <button class="btn" @click="sortByName">Sort by letter</button>
         <button class="btn" @click="sortBy('created_at')">Sort by date</button>
       </div>
-      <button class="btn" @click="goToPage(currentPage + 1)">Next</button>
+      <button
+        class="btn"
+        @click="goToPage(currentPage + 1)"
+        :disabled="currentPage === totalPages"
+      >
+        Next
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import moment from "moment";
 
 export default {
   data() {
@@ -75,10 +81,19 @@ export default {
     };
   },
   computed: {
+    heroStyle() {
+      return {
+        backgroundImage:
+          "url(https://images.pexels.com/photos/1309766/pexels-photo-1309766.jpeg?auto=compress&cs=tinysrgb&w=400)",
+      };
+    },
     paginatedTopics() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
       return this.sortedTopics.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.sortedTopics.length / this.itemsPerPage);
     },
   },
   methods: {
@@ -94,6 +109,48 @@ export default {
           console.error("Error fetching data:", error);
         });
     },
+    applyFilters() {
+      const searchFilteredTopics = this.searchTopic
+        ? this.topicsData.filter((topic) =>
+            topic.title.toLowerCase().startsWith(this.searchTopic.toLowerCase())
+          )
+        : this.topicsData;
+
+      this.sortedTopics = searchFilteredTopics.slice().sort((a, b) => {
+        return a["title"].localeCompare(b["title"]);
+      });
+    },
+    calculateTopicNumber(index) {
+      return (this.currentPage - 1) * this.itemsPerPage + index + 1;
+    },
+    //Kanske finns andra sätt att använda moment på beroende på hur man vill ha det
+    //Eller om man vill ha det på engelska
+    //Man kan även köra install moment moment/locale/sv
+    formatDate(dateString) {
+      const postDate = moment(dateString);
+      const today = moment().startOf("day");
+      const yesterday = moment().subtract(1, "days").startOf("day");
+
+      if (postDate.isSame(today, "d")) {
+        return "Idag " + postDate.format("HH:mm");
+      } else if (postDate.isSame(yesterday, "d")) {
+        return "Igår " + postDate.format("HH:mm");
+      } else if (postDate.isBefore(yesterday)) {
+        return postDate.format("MMM DD HH:mm");
+      } else {
+        return postDate.calendar();
+      }
+    },
+
+    goToPage(pageNumber) {
+      if (pageNumber > 0 && pageNumber <= this.totalPages) {
+        this.currentPage = pageNumber;
+      }
+    },
+    sortByName() {
+      this.sortBy("title");
+      this.applyFilters();
+    },
     sortBy(property) {
       this.sortedTopics = [...this.topicsData].sort((a, b) => {
         if (property === "created_at") {
@@ -103,34 +160,10 @@ export default {
         }
       });
     },
-
-    sortByName() {
-      this.sortBy("title");
-      this.applyFilters();
-    },
-    goToPage(pageNumber) {
-      if (
-        pageNumber > 0 &&
-        pageNumber <= Math.ceil(this.sortedTopics.length / this.itemsPerPage)
-      ) {
-        this.currentPage = pageNumber;
-      }
-    },
-    applyFilters() {
-      // Här används sökfilter
-      const searchFilteredTopics = this.searchTopic
-        ? this.topicsData.filter((topic) =>
-            topic.title.toLowerCase().includes(this.searchTopic.toLowerCase())
-          )
-        : this.topicsData;
-      // Här uppdateras de sorterade ämnena baserat på sökfiltret
-      this.sortedTopics = searchFilteredTopics.slice().sort((a, b) => {
-        // Hårdkodad "title" för att sortera efter titel
-        return a["title"].localeCompare(b["title"]);
-      });
+    topicContent(topic) {
+      return topic.post ? topic.post.content : "No content available";
     },
   },
-
   mounted() {
     this.fetchTopics();
   },

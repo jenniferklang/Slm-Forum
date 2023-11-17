@@ -7,6 +7,9 @@ export const state = reactive({
   messages: [],
 })
 
+// TA INTE BORT - BEHÖVS FÖR ATT KUNNA KÖRA VID PRODUKTION
+// export const socket = io({ path: '/socketchat'});
+
 export const socket = io('http://localhost:3000', {
   path: '/socketchat',
 })
