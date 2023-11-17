@@ -110,27 +110,40 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { useActiveUser } from "/stores/userStore";
+import { ref } from "vue";
+const store = useActiveUser();
+let user = ref();
 
 export default {
-  name: 'LoginRegisterCard',
+  name: "LoginRegisterCard",
 
   data() {
     return {
-      loginUsername: '',
-      loginPassword: '',
-      registerName: '',
-      registerUsername: '',
-      registerEmail: '',
-      registerPassword: '',
+      loginUsername: "",
+      loginPassword: "",
+      registerName: "",
+      registerUsername: "",
+      registerEmail: "",
+      registerPassword: "",
     };
   },
 
   methods: {
+    setUser() {
+      store.$patch({
+        userId: user.user_id,
+        userRealName: user.name,
+        userMail: user.mail,
+        userName: user.username,
+        userImage: user.image_path,
+      });
+    },
     login() {
       axios
         .post(
-          '/api/auth/login',
+          "/api/auth/login",
           {
             username: this.loginUsername,
             password: this.loginPassword,
@@ -138,11 +151,13 @@ export default {
           { withCredentials: true }
         )
         .then((response) => {
-          console.log(response.data);
-          sessionStorage.setItem('jwt', response.data.token);
+          console.log(response);
+          user = response.data.user;
+          sessionStorage.setItem("jwt", response.data.token);
+          this.setUser();
         })
         .then(() => {
-          this.$router.push({ path: '/home' });
+          this.$router.push({ path: "/home" });
         })
         .catch((error) => {
           console.log(error);
@@ -152,7 +167,7 @@ export default {
     register() {
       axios
         .post(
-          '/api/auth/register',
+          "/api/auth/register",
           {
             name: this.registerName,
             username: this.registerUsername,
@@ -163,6 +178,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.setUser();
         })
         .catch((error) => {
           console.log(error);
