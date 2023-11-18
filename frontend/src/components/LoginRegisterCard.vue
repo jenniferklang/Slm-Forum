@@ -178,6 +178,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.setUser();
         })
         .catch((error) => {
           console.log(error);

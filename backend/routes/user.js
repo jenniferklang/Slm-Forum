@@ -9,22 +9,17 @@ const client = new Client({
 });
 client.connect();
 
-// router.put('/', async (request, response) => {
-//   console.log('Put request');
-//   const { id, population } = request.body;
-
-//   await client.query('UPDATE cities SET population = $1 WHERE id = $2', [
-//     population,
-//     id,
-//   ]);
-
-//   const { rows } = await client.query(
-//     'SELECT * FROM cities ORDER BY name ASC',
-//     []
-//   );
-
-//   response.send(rows);
-// });
+router.put("/", async (req, res) => {
+  console.log("Put request");
+  const { id, updatedName } = req.body;
+  console.log(id, updatedName);
+  await client.query("UPDATE users SET userName = $1 WHERE user_id = $2", [
+    updatedName,
+    id,
+  ]);
+  const { rows } = await client.query("SELECT * FROM users", []);
+  res.send(rows);
+});
 
 router.delete("/", async (req, res) => {
   console.log("Delete request");
