@@ -1,6 +1,8 @@
 <template>
   <div>
-
+<h1>
+  hejs
+</h1>
     <CreateTopicPost />
 </div>
 </template>

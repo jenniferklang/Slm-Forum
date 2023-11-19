@@ -28,7 +28,6 @@ router.post('/', async (request, response) => {
     const postsInsertParams = [content, created_by, topicId];
     const postsResult = await client.query(postsInsertQuery, postsInsertParams);
 
-    // Skicka en JSON-respons med resultaten från båda INSERT-operationerna
     response.json({
       topic: topicsResult.rows[0],
       post: postsResult.rows[0],
@@ -36,10 +35,8 @@ router.post('/', async (request, response) => {
 
     console.log('Du har lagt till en topic och en post samtidigt');
   } catch (error) {
-    // Lägg till loggar för att inspektera eventuella fel
     console.error('Fel vid POST-förfrågan:', error);
 
-    // Hantera fel och skicka en felrespons
     return response.status(500).json({
       error: error.message,
     });
