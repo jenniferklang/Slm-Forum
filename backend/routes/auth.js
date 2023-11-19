@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token);
     res.status(200).json({ token, user: user.rows[0] });
   } catch (err) {
     console.error(err.message);
@@ -73,6 +73,11 @@ router.post('/login', async (req, res) => {
 
 router.post('/validate', async (req, res) => {
   checkToken(req, res);
+});
+
+router.get('/logout', async (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({ message: 'Utloggad' });
 });
 
 module.exports = router;

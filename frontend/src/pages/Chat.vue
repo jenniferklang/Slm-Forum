@@ -53,17 +53,6 @@ export default {
   mounted() {
     console.log('Logged in user:', this.loggedInUser);
     this.socket = socket;
-    // this.socket = io('http://localhost:3000', {
-    //   path: '/socketchat',
-    // });
-    // console.log('Socket ID:', this.socket);
-    // this.socket.on('connection', () => {
-    //   console.log('Socket connection:', socket);
-    // });
-    // this.socket.on('new user', (socketId) => {
-    //   console.log('New user connected:', socketId);
-    //   this.currentUserSocketId = socketId;
-    // });
 
     this.socket.on('user disconnected', (socketId) => {
       console.log('User disconnected:', socketId);

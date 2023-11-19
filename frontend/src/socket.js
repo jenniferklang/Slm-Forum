@@ -7,12 +7,15 @@ export const state = reactive({
   messages: [],
 });
 
-// TA INTE BORT - BEHÖVS FÖR ATT KUNNA KÖRA VID PRODUKTION
-// export const socket = io({ path: '/socketchat'});
-
-export const socket = io('http://localhost:3000', {
-  path: '/socketchat',
-});
+let socket;
+if (import.meta.env.MODE === 'production') {
+  socket = io({ path: '/socketchat' });
+} else {
+  socket = io('http://localhost:3000', {
+    path: '/socketchat',
+  });
+}
+export { socket };
 
 socket.on('connect', () => {
   state.connected = true;

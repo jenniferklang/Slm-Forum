@@ -19,11 +19,13 @@ const auth = require('./routes/auth');
 const postTopics = require('./routes/postTopics');
 const forum = require('./routes/forum');
 const api = require('./routes/api');
+const upload = require('./routes/upload');
 
 app.use('/api/auth', auth);
 app.use('/api/postTopics', postTopics);
 app.use('/api/forum', forum);
 app.use('/api', api);
+app.use('/api/uploads', upload);
 
 const server = http.createServer(app);
 const io = initializeSocketIO(server);
@@ -35,21 +37,10 @@ server.listen(port, () => {
   console.log(`Ready on ${port}`);
 });
 
-// const io = socketIO(
-//   app.listen(port, () => {
-//     console.log(`Ready on ${port}`);
-//   })
-// );
-
-// io.on("connection", (socket) => {
-//   console.log("User connected");
-
-//   socket.on("disconnect", () => {
-//     console.log("User disconnected");
-//   });
-
-//   socket.on("chat message", (msg) => {
-//     console.log("Received message:", msg);
-//     io.emit("chat message", msg);
-//   });
-// });
+/**
+ * To do för att få igång projektet via docker:
+ * Byt till PGURI=postgres://postgres:secret@database/postgres i .env
+ * Ändra alla localhost:3000 i frontend så att de pekar mot rätt endpoint
+ * (localhost:3000 -> /socketchat för chattfunktionalitet)
+ * Socket.js
+ */
