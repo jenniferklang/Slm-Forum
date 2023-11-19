@@ -20,6 +20,7 @@ const postTopics = require('./routes/postTopics');
 const forum = require('./routes/forum');
 const api = require('./routes/api');
 const upload = require('./routes/upload');
+const user = require('./routes/user');
 
 app.use('/api/auth', auth);
 app.use('/api/postTopics', postTopics);
