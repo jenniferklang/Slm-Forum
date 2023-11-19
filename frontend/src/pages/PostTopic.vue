@@ -1,17 +1,15 @@
 <template>
   <div>
-<h1>
-  hejs
-</h1>
-    <CreateTopicPost />
+    <CreateTopic />
 </div>
 </template>
 
 <script>
-import CreateTopicPost from '../components/CreateTopicPost.vue';
+import CreateTopic from '../components/CreateTopic.vue';
+
 export default {
   components: {
-     CreateTopicPost,
+     CreateTopic
   },
 };
 </script>
