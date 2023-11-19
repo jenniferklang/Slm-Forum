@@ -1,4 +1,5 @@
 <script>
+import axios from "axios";
 import UserInfo from "../components/UserInfo.vue";
 import { useActiveUser } from "/stores/userStore";
 
@@ -6,6 +7,7 @@ export default {
   data() {
     return {
       user: useActiveUser(),
+      id: sessionStorage.getItem("user_id"),
     };
   },
   components: {
@@ -14,6 +16,29 @@ export default {
   props: {
     label: String,
     placeholder: String,
+  },
+  methods: {
+    deleteUser() {
+      axios
+        .delete(
+          `/api/user/`,
+          {
+            data: {
+              id: this.id,
+            },
+          },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .then(() => {
+          this.$router.push({ path: "/" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
@@ -32,12 +57,13 @@ export default {
       <UserInfo label="Email" :placeholder="user.userMail" />
       <UserInfo label="Username" :placeholder="user.userName" />
       <UserInfo label="Password" placeholder="*********" />
-      <button class="btn btn-warning">Delete User</button>
+      <button class="btn btn-warning" @click="deleteUser">Delete User</button>
     </div>
     <p>Name: {{ user.userName }}</p>
     <p>Real Name: {{ user.userRealName }}</p>
     <p>User Id: {{ user.userId }}</p>
     <p>Email: {{ user.userMail }}</p>
     <p>Image url: {{ user.userImage }}</p>
+    <p>Id: {{ id }}</p>
   </div>
 </template>

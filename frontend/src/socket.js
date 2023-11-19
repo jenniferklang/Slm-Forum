@@ -31,10 +31,5 @@ socket.on('new user', (args) => {
 });
 
 socket.on('chat message', (msg) => {
-  console.log('Received message:', msg);
   state.messages.push(msg);
 });
-
-// socket.on('bar', (...args) => {
-//   state.barEvents.push(args);
-// });

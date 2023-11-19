@@ -30,6 +30,11 @@ router.post('/register', async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    const newUser = await client.query(
+      'INSERT INTO users (username, mail, password, name) VALUES ($1, $2, $3, $4) RETURNING *',
+      [username, mail, hashedPassword, name]
+    );
+
     res.status(201).json({ message: 'Användare registrerad.' });
   } catch (err) {
     console.error(err.message);
