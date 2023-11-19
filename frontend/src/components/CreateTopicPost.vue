@@ -34,13 +34,14 @@ export default {
     submitForm() {
       const postData = {
         title: this.topicTitle,
-        created_by: 2,
         content: this.postContent
       };
 
       axios.post('/api/postTopics', postData)
         .then(response => {
           console.log(response.data);
+          this.topicTitle = "";
+          this.postContent = "";
         })
         .catch(error => {
           console.error('Error:', error);

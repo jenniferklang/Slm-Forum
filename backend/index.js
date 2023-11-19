@@ -28,7 +28,7 @@ app.use('/api/postTopics', postTopics);
 app.use('/api/forum', forum);
 app.use('/api', api);
 app.use('/api/uploads', upload);
-// app.use('/api/user', user);
+app.use('/api/user', user);
 
 const server = http.createServer(app);
 const io = initializeSocketIO(server);
