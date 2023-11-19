@@ -20,6 +20,10 @@ const routes = [
     path: '/privacy',
     component: () => import('./pages/PrivacyPolicy.vue'),
   },
+  {
+    path: '/posttopic',
+    component: () => import('./pages/PostTopic.vue'),
+  },
 ];
 
 const router = createRouter({
