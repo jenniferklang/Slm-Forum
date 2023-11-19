@@ -14,7 +14,11 @@
           </div>
         </div>
       </div>
+      <router-link to="/posttopic">
+        <button className="btn btn-primary">Start New Topic</button>
+    </router-link>
       <div class="custom-input-container">
+
         <input
           type="text"
           placeholder="Search topic"
