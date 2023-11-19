@@ -25,8 +25,15 @@
           <li>
             <router-link to="/home">Hem</router-link>
           </li>
+          <!-- <li><router-link to="/chat">Chat</router-link></li> -->
+          <li><router-link to="/forum">Forum</router-link></li>
           <li><router-link to="/chat">Chat</router-link></li>
+          <li><router-link to="/policy">Privacy</router-link></li>
+          <li><router-link to="/about">Om</router-link></li>
           <li><router-link to="/user">Inställningar</router-link></li>
+          <li v-if="loggedIn">
+            <router-link to="/" @click="logout">Logga ut</router-link>
+          </li>
         </ul>
       </div>
     </div>
@@ -74,8 +81,34 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'Navbar',
+
+  computed: {
+    loggedIn() {
+      if (sessionStorage.getItem('user_id') !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+
+  methods: {
+    logout() {
+      sessionStorage.clear();
+
+      axios('api/auth/logout')
+        .then((response) => {
+          console.log(response.data);
+        })
+        .then(() => {
+          this.$router.push('/');
+        });
+    },
+  },
 };
 </script>
 

@@ -1,13 +1,17 @@
 services:
   backend:
-    build: backend
+    build:
+      context: ./backend
     depends_on:
       database:
         condition: service_healthy
     environment:
       - PGURI=${PGURI}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - '3000:3000'
+    volumes:
+      - ./backend/uploads:/app/uploads
 
   database:
     environment:
@@ -23,7 +27,7 @@ services:
 
   frontend:
     build:
-      context: frontend
+      context: ./frontend
     depends_on:
       - backend
     ports:

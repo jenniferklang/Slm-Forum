@@ -4,7 +4,7 @@
       <Navbar />
       <router-view class="my-12"></router-view>
     </div>
-    <Footer />
+    <Footer class="" />
   </main>
 </template>
 

@@ -1,17 +1,3 @@
--- CREATE TABLE IF NOT EXISTS cities (
---   id serial PRIMARY KEY,
---   name text UNIQUE NOT NULL,
---   population INTEGER NOT NULL
--- );
-
--- INSERT INTO cities (name, population) VALUES
---   ('Stockholm', 975904),
---   ('Göteborg', 5836),
---   ('Vänersborg', 347949),
---   ('Malmö', 31251)
---   ON CONFLICT (name) DO NOTHING;
-
-
 CREATE TABLE IF NOT EXISTS users (
   user_id serial PRIMARY KEY,
   name text NOT NULL,
@@ -39,15 +25,15 @@ CREATE TABLE IF NOT EXISTS posts (
   FOREIGN KEY (topic) REFERENCES topics(topic_id)
 );
 
--- CREATE TABLE IF NOT EXISTS comments (
---   comment_id serial PRIMARY KEY,
---   content text NOT NULL,
---   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
---   created_by INTEGER NOT NULL,
---   post INTEGER NOT NULL,
---   FOREIGN KEY (created_by) REFERENCES users(user_id),
---   FOREIGN KEY (post) REFERENCES posts(post_id)
--- )
+CREATE TABLE IF NOT EXISTS comments (
+  comment_id serial PRIMARY KEY,
+  content text NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  created_by INTEGER NOT NULL,
+  post INTEGER NOT NULL,
+  FOREIGN KEY (created_by) REFERENCES users(user_id),
+  FOREIGN KEY (post) REFERENCES posts(post_id)
+);
 
 CREATE TABLE IF NOT EXISTS userTopics (
   user_id INTEGER NOT NULL,
@@ -75,11 +61,11 @@ INSERT INTO posts (content, created_by, topic) VALUES (
   1
 );
 
--- INSERT INTO comments (content, created_by, post) VALUES (
---   'Hello World!',
---   1,
---   1
--- )
+INSERT INTO comments (content, created_by, post) VALUES (
+  'Hello World!',
+  1,
+  1
+);
 
 INSERT INTO userTopics (user_id, topic_id) VALUES (
   1,

@@ -2,27 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { Client } = require('pg');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { checkToken } = require('../middlewares/auth');
 const dotenv = require('dotenv');
 dotenv.config();
 
 const client = new Client({
-  connectionString: process.env.PGURI_DEV,
+  connectionString: process.env.PGURI,
 });
 client.connect();
-
-router.get('/', async (_request, response) => {
-  console.log('Get request');
-  const { rows } = await client.query('SELECT * FROM topics;', []);
-
-  response.send(rows);
-});
 
 router.post('/register', async (req, res) => {
   try {
     const { name, username, mail, password } = req.body;
-    console.log('req.body: ', req.body);
+
     const existingUser = await client.query(
       'SELECT * FROM users WHERE username = $1 OR mail = $2',
       [username, mail]
@@ -42,13 +35,7 @@ router.post('/register', async (req, res) => {
       [username, mail, hashedPassword, name]
     );
 
-    const token = jwt.sign(
-      { userId: newUser.rows[0].id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    res.cookie('token', token, { httpOnly: true });
-    res.status(201).json({ token });
+    res.status(201).json({ message: 'Användare registrerad.' });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: 'Serverfel' });
@@ -74,13 +61,15 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.rows[0].id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      {
+        userId: user.rows[0].user_id,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      },
+      process.env.JWT_SECRET
     );
 
-    res.cookie('token', token, { httpOnly: true });
-    res.status(200).json({ token });
+    res.cookie('token', token);
+    res.status(200).json({ token, user: user.rows[0] });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: 'Serverfel' });
@@ -90,4 +79,10 @@ router.post('/login', async (req, res) => {
 router.post('/validate', async (req, res) => {
   checkToken(req, res);
 });
+
+router.get('/logout', async (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({ message: 'Utloggad' });
+});
+
 module.exports = router;

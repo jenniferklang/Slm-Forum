@@ -17,12 +17,26 @@ const routes = [
     component: () => import('./pages/UserSettings.vue'),
   },
   {
-    path: '/privacy',
+    path: '/policy',
     component: () => import('./pages/PrivacyPolicy.vue'),
   },
   {
+<<<<<<< HEAD
     path: '/posttopic',
     component: () => import('./pages/PostTopic.vue'),
+=======
+    path: '/about',
+    component: () => import('./components/Text.vue'),
+  },
+  {
+    path: '/forum',
+    component: () => import('./pages/ForumPage.vue'),
+    //meta: { requiresAuth: true },
+  },
+  {
+    path: '/chat',
+    component: () => import('./pages/Chat.vue'),
+>>>>>>> 199faf0a5863d4c33043c190eaae5ed709c4eaf3
   },
 ];
 
@@ -54,7 +68,8 @@ async function checkToken() {
 
   try {
     const response = await axios.post('/api/auth/validate', { token });
-    console.log('Validate JWT response: ', response);
+    console.log('Validate JWT response: ', response.data);
+    sessionStorage.setItem('user_id', response.data.userId);
     return response.data.valid;
   } catch (err) {
     console.error(err);
