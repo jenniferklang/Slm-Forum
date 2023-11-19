@@ -8,7 +8,7 @@
           ? 'chat-end ml-auto'
           : 'chat-start mr-auto'
       "
-      class="border-base-300 bg-base-100 rounded-b-box rounded-se-box flex min-h-[6rem] min-w-[10rem] max-w-4xl flex-wrap flex-col justify-center gap-2 bg-top p-4 max-w-[15rem]"
+      class="border-base-300 bg-base-100 rounded-b-box rounded-se-box flex min-h-[6rem] min-w-[10rem] flex-wrap flex-col justify-center gap-2 bg-top p-4 max-w-[15rem]"
     >
       <div class="chat-header">
         {{ msg.username }}

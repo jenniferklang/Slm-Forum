@@ -21,10 +21,6 @@ const routes = [
     component: () => import('./pages/PrivacyPolicy.vue'),
   },
   {
-<<<<<<< HEAD
-    path: '/posttopic',
-    component: () => import('./pages/PostTopic.vue'),
-=======
     path: '/about',
     component: () => import('./components/Text.vue'),
   },
@@ -36,7 +32,10 @@ const routes = [
   {
     path: '/chat',
     component: () => import('./pages/Chat.vue'),
->>>>>>> 199faf0a5863d4c33043c190eaae5ed709c4eaf3
+  },
+  {
+    path: '/posttopic',
+    component: () => import('./pages/PostTopic.vue'),
   },
 ];
 
