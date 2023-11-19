@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(authenticateToken);
+// app.use(authenticateToken);
 
 // Och säg till appen att använda dem här
 app.use('/api/auth', auth);

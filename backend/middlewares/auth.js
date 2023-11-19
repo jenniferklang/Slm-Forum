@@ -5,6 +5,7 @@ const authenticateToken = (req, res, next) => {
     '/api/auth/register',
     '/api/auth/login',
     '/api/auth/validate',
+    '/api/postTopic',
   ];
   if (publicRoutes.includes(req.path)) {
     return next();
