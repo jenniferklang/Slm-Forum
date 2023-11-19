@@ -21,10 +21,13 @@ const routes = [
     component: () => import('./pages/PrivacyPolicy.vue'),
   },
   {
+<<<<<<< HEAD
     path: '/posttopic',
     component: () => import('./pages/PostTopic.vue'),
   },
   {
+=======
+>>>>>>> dd6ef3b2086dcd09442669d09c409000b1b8db34
     path: '/about',
     component: () => import('./components/Text.vue'),
   },
@@ -36,6 +39,13 @@ const routes = [
   {
     path: '/chat',
     component: () => import('./pages/Chat.vue'),
+<<<<<<< HEAD
+=======
+  },
+  {
+    path: '/posttopic',
+    component: () => import('./pages/PostTopic.vue'),
+>>>>>>> dd6ef3b2086dcd09442669d09c409000b1b8db34
   },
 ];
 

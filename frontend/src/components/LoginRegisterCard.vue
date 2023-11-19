@@ -1,11 +1,6 @@
 <template>
-  <div class="card w-4/12 bg-base-200 min-w-[22rem] shadow-xl">
+  <div class="card w-4/12 bg-base-200 min-w-[352px] shadow-xl">
     <figure>
-      <!-- <img
-        src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-        alt="Shoes"
-      /> -->
-
       <div class="diff aspect-[16/9]">
         <div class="diff-item-1">
           <div
@@ -24,7 +19,7 @@
         <div class="diff-resizer"></div>
       </div>
     </figure>
-    <div class="card-body h-[50vh]">
+    <div class="card-body">
       <div class="tabs tabs-bordered self-center">
         <input
           type="radio"
@@ -68,30 +63,35 @@
                 placeholder="Namn"
                 v-model="registerName"
                 class="input w-full max-w-xs bg-white"
+                required
               />
               <input
                 type="text"
                 placeholder="Användarnamn"
                 v-model="registerUsername"
                 class="input w-full max-w-xs bg-white"
+                required
               />
               <input
                 type="email"
                 placeholder="E-post"
                 v-model="registerEmail"
                 class="input w-full max-w-xs bg-white"
+                required
               />
               <input
                 type="password"
                 placeholder="Lösenord"
                 v-model="registerPassword"
                 class="input w-full max-w-xs bg-white"
+                required
               />
               <label class="label cursor-pointer">
                 <input
                   type="checkbox"
                   class="checkbox mr-5"
-                  v-model="privacyChecked"
+                  v-model="privacyCheck"
+                  required
                 />
                 <span class="label-text max-w-[16rem]"
                   >Jag godkänner att ni hanterar min data i enlighet med
@@ -106,6 +106,19 @@
         </div>
       </div>
     </div>
+
+    <dialog ref="error_modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Nu har vi stött på ett problem!</h3>
+        <p class="py-4">{{ errorMessage }}</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Stäng</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
 
@@ -121,19 +134,20 @@ export default {
 
   data() {
     return {
-      loginUsername: "",
-      loginPassword: "",
-      registerName: "",
-      registerUsername: "",
-      registerEmail: "",
-      registerPassword: "",
+      loginUsername: null,
+      loginPassword: null,
+      registerName: null,
+      registerUsername: null,
+      registerEmail: null,
+      registerPassword: null,
+      errorMessage: null,
+      privacyCheck: false,
     };
   },
 
   methods: {
     setUser() {
       store.$patch({
-        userId: user.user_id,
         userRealName: user.name,
         userMail: user.mail,
         userName: user.username,
@@ -161,28 +175,38 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.errorMessage = error.response.data.message;
+          this.$refs.error_modal.showModal();
         });
     },
 
     register() {
-      axios
-        .post(
-          "/api/auth/register",
-          {
-            name: this.registerName,
-            username: this.registerUsername,
-            mail: this.registerEmail,
-            password: this.registerPassword,
-          },
-          { withCredentials: true }
-        )
-        .then((response) => {
-          console.log(response);
-          this.setUser();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (this.privacyCheck) {
+        axios
+          .post(
+            "/api/auth/register",
+            {
+              name: this.registerName,
+              username: this.registerUsername,
+              mail: this.registerEmail,
+              password: this.registerPassword,
+            },
+            { withCredentials: true }
+          )
+          .then((response) => {
+            console.log(response);
+            this.setUser();
+          })
+          .catch((error) => {
+            console.log(error);
+            this.errorMessage = error.response.data.message;
+            this.$refs.error_modal.showModal();
+          });
+      } else {
+        this.errorMessage =
+          "Du måste godkänna integritetspolicyn för att kunna registrera dig!";
+        this.$refs.error_modal.showModal();
+      }
     },
   },
 };

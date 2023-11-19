@@ -7,21 +7,22 @@
       type="text"
       :placeholder="placeholder"
       class="input input-bordered w-full max-w-xs h-14"
-      v-model="updatedInfo"
+      v-model="input"
     />
-    <div class="badge badge-neutral btn-xs m-0.5" @click="updateUser">
+    <div
+      class="btn btn-xs btn-neutral btn-xs m-1 relative left-64"
+      @click="updateUser"
+    >
       Change
     </div>
   </div>
-  {{ label }}
-  {{ updatedInfo }}
-  {{ id }}
 </template>
 
 <script>
 import axios from "axios";
+import { useActiveUser } from "/stores/userStore";
 import { ref } from "vue";
-
+const store = useActiveUser();
 let user = ref();
 
 export default {
@@ -32,7 +33,7 @@ export default {
   },
   data() {
     return {
-      updatedInfo: "",
+      input: "",
       id: sessionStorage.getItem("user_id"),
     };
   },
@@ -43,17 +44,27 @@ export default {
           "/api/user",
           {
             id: this.id,
-            updatedName: this.updatedInfo,
+            label: this.label,
+            value: this.input,
           },
           { withCredentials: true }
         )
         .then((res) => {
           console.log(res);
-          user = res.data.user;
+          user = res.data;
+          this.setUser();
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    setUser() {
+      store.$patch({
+        userRealName: user[0].name,
+        userMail: user[0].mail,
+        userName: user[0].username,
+        userImage: user[0].image_path,
+      });
     },
   },
 };
