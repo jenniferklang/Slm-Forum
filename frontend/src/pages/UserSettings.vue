@@ -57,14 +57,7 @@ export default {
       <UserInfo label="Email" :placeholder="user.userMail" />
       <UserInfo label="Username" :placeholder="user.userName" />
       <UserInfo label="Password" placeholder="*********" />
-      <UserInfo label="Id" v-model="id" placeholder="*********" />
       <button class="btn btn-warning" @click="deleteUser">Delete User</button>
     </div>
-    <p>Name: {{ user.userName }}</p>
-    <p>Real Name: {{ user.userRealName }}</p>
-    <p>User Id: {{ user.userId }}</p>
-    <p>Email: {{ user.userMail }}</p>
-    <p>Image url: {{ user.userImage }}</p>
-    <p>Id: {{ id }}</p>
   </div>
 </template>

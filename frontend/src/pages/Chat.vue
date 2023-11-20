@@ -8,7 +8,7 @@
           ? 'chat-end ml-auto'
           : 'chat-start mr-auto'
       "
-      class="border-base-300 bg-base-100 rounded-b-box rounded-se-box flex min-h-[6rem] min-w-[10rem] max-w-4xl flex-wrap flex-col justify-center gap-2 bg-top p-4 max-w-[15rem]"
+      class="border-base-300 bg-base-100 rounded-b-box rounded-se-box flex min-h-[6rem] min-w-[10rem] flex-wrap flex-col justify-center gap-2 bg-top p-4 max-w-[15rem]"
     >
       <div class="chat-header">
         {{ msg.username }}
@@ -37,36 +37,43 @@
 </template>
 
 <script>
-import moment from 'moment'
-import axios from 'axios'
+import moment from 'moment';
+import axios from 'axios';
 
-import { socket, state } from '../socket'
+import { socket, state } from '../socket';
 
 export default {
   data() {
     return {
       message: '',
       username: '',
-    }
+    };
   },
 
-  mounted() {},
+  mounted() {
+    console.log('Logged in user:', this.loggedInUser);
+    this.socket = socket;
+
+    this.socket.on('user disconnected', (socketId) => {
+      console.log('User disconnected:', socketId);
+    });
+  },
 
   computed: {
     loggedInUser() {
-      return sessionStorage.getItem('user_id')
+      return sessionStorage.getItem('user_id');
     },
 
     connected() {
-      return state.connected
+      return state.connected;
     },
 
     users() {
-      return state.users
+      return state.users;
     },
 
     messages() {
-      return state.messages
+      return state.messages;
     },
   },
 
@@ -74,7 +81,7 @@ export default {
     async sendMessage() {
       const response = await axios.post('/api/chat', {
         user_id: sessionStorage.getItem('user_id'),
-      })
+      });
 
       socket.emit('chat message', {
         message: this.message,
@@ -82,22 +89,22 @@ export default {
         timestamp: new Date(),
         status: 'Delivered',
         user_id: response.data.user.user_id,
-      })
-      this.message = ''
+      });
+      this.message = '';
     },
 
     getStatus(msg) {
       if (msg.username !== this.loggedInUser) {
-        return msg.status === 'Delivered' ? 'Received' : msg.status
+        return msg.status === 'Delivered' ? 'Received' : msg.status;
       }
-      return msg.status
+      return msg.status;
     },
 
     getTimeAgo(timestamp) {
-      return moment(timestamp).fromNow()
+      return moment(timestamp).fromNow();
     },
   },
-}
+};
 </script>
 <style scoped>
 .chat-container {

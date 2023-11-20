@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Client } = require("pg");
+const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -9,22 +10,62 @@ const client = new Client({
 });
 client.connect();
 
-// router.put('/', async (request, response) => {
-//   console.log('Put request');
-//   const { id, population } = request.body;
+router.put("/", async (req, res) => {
+  console.log("Put request");
+  const { id, value, label } = req.body;
 
-//   await client.query('UPDATE cities SET population = $1 WHERE id = $2', [
-//     population,
-//     id,
-//   ]);
+  if (label === "Name") {
+    await client.query("UPDATE users SET name = $1 WHERE user_id = $2", [
+      value,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
 
-//   const { rows } = await client.query(
-//     'SELECT * FROM cities ORDER BY name ASC',
-//     []
-//   );
+  if (label === "Email") {
+    await client.query("UPDATE users SET mail = $1 WHERE user_id = $2", [
+      value,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
 
-//   response.send(rows);
-// });
+  if (label === "Username") {
+    await client.query("UPDATE users SET username = $1 WHERE user_id = $2", [
+      value,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+
+  if (label === "Password") {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(value, saltRounds);
+
+    await client.query("UPDATE users SET password = $1 WHERE user_id = $2", [
+      hashedPassword,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+  console.log("User Information Updated");
+});
 
 router.delete("/", async (req, res) => {
   console.log("Delete request");

@@ -8,12 +8,20 @@
       @keyup.enter="sendMessage"
       placeholder="Type a message"
     />
+
+    <div>
+      <form @submit.prevent="uploadImage" enctype="multipart/form-data">
+        <input type="file" ref="fileInput" accept="image/*" />
+        <button type="submit">Upload Image</button>
+      </form>
+    </div>
+    <img :src="imageUrl" alt="Test" />
   </div>
 </template>
 
 <script>
-import io from 'socket.io-client';
 import axios from 'axios';
+import { socket, state } from '../socket';
 
 export default {
   data() {
@@ -21,51 +29,51 @@ export default {
       socket: null,
       messages: [],
       newMessage: '',
+      imageUrl: null,
     };
   },
   computed() {},
   mounted() {
-    this.getUser(sessionStorage.getItem('user_id'));
-
-    // PRODUKTION
-    // this.socket = io({ path: '/socketchat' });
-
-    this.socket = io('http://localhost:3000', {
-      path: '/socketchat',
-    });
-
-    // När du är ansluten loggas det ut.
-    this.socket.on('connect', () => {
-      console.log('Ansluten till socket.io-servern!');
-    });
-
-    // Om anslutningen misslyckas loggas det ut.
-    this.socket.on('connect_error', (error) => {
-      console.log('Socket.io Error: ', error);
-    });
-
-    // När ett nytt meddelande kommer från servern till klienten läggs det till i listan med meddelanden.
-    this.socket.on('chat message', (message) => {
-      this.messages.push(message);
-    });
+    axios
+      .get('/api/uploads/image/Johan.jpg', { responseType: 'blob' })
+      .then((response) => {
+        const url = URL.createObjectURL(new Blob([response.data]));
+        this.imageUrl = url;
+      })
+      .catch((error) => {
+        console.error('Error vid hämtning av bild:', error);
+      });
   },
   methods: {
     // Skicka/emitta meddelande till servern
-    sendMessage() {
+    async sendMessage() {
+      const response = await axios.post('/api', {
+        user_id: sessionStorage.getItem('user_id'),
+      });
+      console.log('RESPONSE_: ', response.data);
+
       this.socket.emit('chat message', {
         text: this.newMessage,
+        username: response.data.username,
         id: Date.now(),
       });
       this.newMessage = '';
     },
 
-    getUser(id) {
+    uploadImage() {
+      const fileInput = this.$refs.fileInput;
+      const file = fileInput.files[0];
+
+      const formData = new FormData();
+      formData.append('image', file);
+
       axios
-        .post('/api', {
-          user_id: id,
-        })
+        .post('/api/uploads/upload', formData)
         .then((response) => {
           console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
         });
     },
   },
