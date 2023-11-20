@@ -22,7 +22,7 @@ const forum = require('./routes/forum')
 const user = require('./routes/user')
 
 app.use('/api/auth', auth)
-app.use('/api', api)
+app.use('/api/chat', api)
 app.use('/api/postTopics', postTopics)
 app.use('/api/forum', forum)
 app.use('/api/user', user)

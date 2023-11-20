@@ -30,7 +30,7 @@
         @click="sendMessage"
         class="p-2 bg-blue-500 text-white rounded block"
       >
-        Send
+        Skicka
       </button>
     </div>
   </div>
@@ -72,7 +72,7 @@ export default {
 
   methods: {
     async sendMessage() {
-      const response = await axios.post('/api', {
+      const response = await axios.post('/api/chat', {
         user_id: sessionStorage.getItem('user_id'),
       })
 
