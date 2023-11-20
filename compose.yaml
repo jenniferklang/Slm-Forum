@@ -9,7 +9,7 @@ services:
       - PGURI=${PGURI}
       - JWT_SECRET=${JWT_SECRET}
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
       - ./backend/uploads:/app/uploads
 
@@ -18,10 +18,10 @@ services:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
     healthcheck:
       interval: 1s
-      test: 'pg_isready --username=postgres'
+      test: "pg_isready --username=postgres"
     image: postgres
     ports:
-      - '5433:5432'
+      - "5433:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
 
@@ -31,4 +31,4 @@ services:
     depends_on:
       - backend
     ports:
-      - '80:80'
+      - "80:80"
