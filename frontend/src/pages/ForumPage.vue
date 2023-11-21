@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="overflow-x-auto">
-      <div class="hero min-h-screen" :style="heroStyle">
+      <div v-if="heroImage" class="hero min-h-screen" :style="heroStyle">
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
@@ -108,13 +108,15 @@ export default {
       searchTopic: "",
       sortOrder: "desc",
       currentSort: "created_at",
+      heroImage: null,
+      heroImageUrl:
+        "https://images.pexels.com/photos/1309766/pexels-photo-1309766.jpeg?auto=compress&cs=tinysrgb&w=400",
     };
   },
   computed: {
     heroStyle() {
       return {
-        backgroundImage:
-          "url(https://images.pexels.com/photos/1309766/pexels-photo-1309766.jpeg?auto=compress&cs=tinysrgb&w=400)",
+        backgroundImage: this.heroImage ? `url(${this.heroImage})` : "none",
       };
     },
     paginatedTopics() {
@@ -126,10 +128,20 @@ export default {
       return Math.ceil(this.sortedTopics.length / this.itemsPerPage);
     },
   },
+  mounted() {
+    this.fetchTopics();
+    this.preloadImage(this.heroImageUrl);
+  },
+
   methods: {
     fetchTopics() {
+      const page = this.currentPage;
+      const pageSize = this.itemsPerPage;
       axios
-        .get("/api/forum", { withCredentials: true })
+        .get("/api/forum", {
+          withCredentials: true,
+          params: { page, pageSize },
+        })
         .then((response) => {
           console.log("Response data:", response.data);
           this.topicsData = response.data;
@@ -173,10 +185,13 @@ export default {
     },
 
     goToPage(pageNumber) {
-      if (pageNumber > 0 && pageNumber <= this.totalPages) {
+      console.log(`Navigating to page ${pageNumber}`);
+      console.log(`Total pages: ${this.totalPages}`);
+      if (pageNumber >= 1 && pageNumber <= this.totalPages) {
         this.currentPage = pageNumber;
       }
     },
+
     sortByName() {
       this.sortBy("title");
       this.applyFilters();
@@ -205,9 +220,13 @@ export default {
         }
       });
     },
-  },
-  mounted() {
-    this.fetchTopics();
+    preloadImage(url) {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        this.heroImage = url;
+      };
+    },
   },
 };
 </script>
