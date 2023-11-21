@@ -95,7 +95,7 @@
                 />
                 <span class="label-text max-w-[16rem]"
                   >Jag godkänner att ni hanterar min data i enlighet med
-                  <router-link to="/policy"
+                  <router-link to="/policy" class="link link-primary"
                     >integritetsskyddspolicyn</router-link
                   ></span
                 >

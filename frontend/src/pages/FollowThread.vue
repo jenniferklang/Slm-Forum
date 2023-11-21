@@ -36,7 +36,6 @@ export default {
           `/api/thread/${this.$route.params.topicId}`
         );
         console.log(response.data);
-        console.log('Topic ID:', topicId);
         this.topic = response.data[0];
         this.posts = response.data.slice(1);
       } catch (error) {
@@ -56,8 +55,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$route.params.topicId);
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

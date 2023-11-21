@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar rounded-lg mx-auto shadow-md">
+  <div class="navbar mx-auto shadow-md">
     <div class="navbar-start">
       <div class="dropdown">
         <label tabindex="0" class="btn btn-ghost btn-circle">
