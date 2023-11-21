@@ -95,7 +95,7 @@
                 />
                 <span class="label-text max-w-[16rem]"
                   >Jag godkänner att ni hanterar min data i enlighet med
-                  <router-link to="/policy"
+                  <router-link to="/policy" class="link link-primary"
                     >integritetsskyddspolicyn</router-link
                   ></span
                 >
@@ -123,14 +123,14 @@
 </template>
 
 <script>
-import axios from "axios";
-import { useActiveUser } from "/stores/userStore";
-import { ref } from "vue";
+import axios from 'axios';
+import { useActiveUser } from '/stores/userStore';
+import { ref } from 'vue';
 const store = useActiveUser();
 let user = ref();
 
 export default {
-  name: "LoginRegisterCard",
+  name: 'LoginRegisterCard',
 
   data() {
     return {
@@ -158,7 +158,7 @@ export default {
     login() {
       axios
         .post(
-          "/api/auth/login",
+          '/api/auth/login',
           {
             username: this.loginUsername,
             password: this.loginPassword,
@@ -168,11 +168,11 @@ export default {
         .then((response) => {
           console.log(response);
           user = response.data.user;
-          sessionStorage.setItem("jwt", response.data.token);
+          sessionStorage.setItem('jwt', response.data.token);
           this.setUser();
         })
         .then(() => {
-          this.$router.push({ path: "/home" });
+          this.$router.push({ path: '/' });
         })
         .catch((error) => {
           console.log(error);
@@ -185,7 +185,7 @@ export default {
       if (this.privacyCheck) {
         axios
           .post(
-            "/api/auth/register",
+            '/api/auth/register',
             {
               name: this.registerName,
               username: this.registerUsername,
@@ -205,7 +205,7 @@ export default {
           });
       } else {
         this.errorMessage =
-          "Du måste godkänna integritetspolicyn för att kunna registrera dig!";
+          'Du måste godkänna integritetspolicyn för att kunna registrera dig!';
         this.$refs.error_modal.showModal();
       }
     },

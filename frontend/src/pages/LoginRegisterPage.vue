@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center mih-h-[100vh] items-center">
+  <div class="flex justify-center items-center">
     <Card />
   </div>
 </template>

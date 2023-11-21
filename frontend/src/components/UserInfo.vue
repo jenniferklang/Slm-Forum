@@ -10,7 +10,7 @@
       v-model="input"
     />
     <div
-      class="btn btn-xs btn-neutral btn-xs m-1 relative left-64"
+      class="btn btn-neutral btn-xs m-1 relative left-64"
       @click="updateUser"
     >
       Ändra
@@ -19,29 +19,29 @@
 </template>
 
 <script>
-import axios from "axios";
-import { useActiveUser } from "/stores/userStore";
-import { ref } from "vue";
+import axios from 'axios';
+import { useActiveUser } from '/stores/userStore';
+import { ref } from 'vue';
 const store = useActiveUser();
 let user = ref();
 
 export default {
-  name: "UserInfo",
+  name: 'UserInfo',
   props: {
     label: String,
     placeholder: String,
   },
   data() {
     return {
-      input: "",
-      id: sessionStorage.getItem("user_id"),
+      input: '',
+      id: sessionStorage.getItem('user_id'),
     };
   },
   methods: {
     updateUser() {
       axios
         .put(
-          "/api/user",
+          '/api/user',
           {
             id: this.id,
             label: this.label,

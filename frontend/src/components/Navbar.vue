@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar rounded-lg mx-auto shadow-md">
+  <div class="navbar mx-auto shadow-md">
     <div class="navbar-start">
       <div class="dropdown">
         <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -23,16 +23,15 @@
           class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <router-link to="/home">Hem</router-link>
+            <router-link to="/">Hem</router-link>
           </li>
           <!-- <li><router-link to="/chat">Chat</router-link></li> -->
           <li><router-link to="/forum">Forum</router-link></li>
           <li><router-link to="/chat">Chat</router-link></li>
           <li><router-link to="/policy">Privacy</router-link></li>
-          <li><router-link to="/about">Om</router-link></li>
           <li><router-link to="/user">Inställningar</router-link></li>
           <li v-if="loggedIn">
-            <router-link to="/" @click="logout">Logga ut</router-link>
+            <router-link to="/login" @click="logout">Logga ut</router-link>
           </li>
         </ul>
       </div>
