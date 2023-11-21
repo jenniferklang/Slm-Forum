@@ -35,8 +35,11 @@ export default {
   computed() {},
   mounted() {
     axios
-      .get('/api/uploads/image/Johan.jpg', { responseType: 'blob' })
+      .get('/api/uploads/image/DB97E278-5E0C-47CB-928A-3833FCA4D030.jpg', {
+        responseType: 'blob',
+      })
       .then((response) => {
+        console.log(response.data);
         const url = URL.createObjectURL(new Blob([response.data]));
         this.imageUrl = url;
       })
