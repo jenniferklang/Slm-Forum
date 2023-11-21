@@ -20,7 +20,7 @@ import axios from 'axios';
 
 export default {
   props: {
-    topicId: Number,
+    topicId: String,
   },
   components: { CreatePost },
   data() {
@@ -32,7 +32,10 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(`/api/thread/${parseInt(this.$route.params.topicId)}`);
+        const response = await axios.get(
+          `/api/thread/${this.$route.params.topicId}`
+        );
+        console.log(response.data);
         console.log('Topic ID:', topicId);
         this.topic = response.data[0];
         this.posts = response.data.slice(1);
@@ -47,10 +50,13 @@ export default {
   },
   computed: {
     sortedPosts() {
-      return this.posts.sort((a, b) => new Date(a.post_created_at) - new Date(b.post_created_at));
+      return this.posts.sort(
+        (a, b) => new Date(a.post_created_at) - new Date(b.post_created_at)
+      );
     },
   },
   mounted() {
+    console.log(this.$route.params.topicId);
     this.fetchData();
   },
 };
