@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       postContent: "",
-      topicId: this.$route.params.topicId
+      topicId: parseInt(this.$route.params.topicId)
     };
   },
   methods: {
