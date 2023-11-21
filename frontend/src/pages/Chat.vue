@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-col justify-center items-center">
     <div
-      class="w-[50%] mx-auto h-[80vh] overflow-scroll bg-gray-300 rounded-xl relative"
+      ref="chatContainer"
+      class="w-[50%] mx-auto h-[80vh] overflow-scroll rounded-xl relative border"
     >
       <div
         v-for="(msg, index) in messages"
@@ -19,8 +20,26 @@
             getTimeAgo(msg.timestamp)
           }}</time>
         </div>
+        <div class="flex gap-3">
+          <div
+            v-if="msg.user_id === parseInt(loggedInUser)"
+            class="chat-bubble mb-3 mr-1"
+          >
+            {{ msg.message }}
+          </div>
+          <div class="chat-image avatar">
+            <div class="w-10 rounded-full">
+              <img :alt="`Avatar of ${msg.username}`" :src="msg.image_path" />
+            </div>
+          </div>
 
-        <div class="chat-bubble">{{ msg.message }}</div>
+          <div
+            v-if="msg.user_id !== parseInt(loggedInUser)"
+            class="chat-bubble mb-3 ml-1"
+          >
+            {{ msg.message }}
+          </div>
+        </div>
         <div class="chat-footer opacity-50">{{ getStatus(msg) }}</div>
       </div>
     </div>
@@ -57,7 +76,6 @@ export default {
   data() {
     return {
       message: '',
-      username: '',
     }
   },
 
@@ -84,6 +102,19 @@ export default {
   },
 
   methods: {
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const chatContainer = this.$refs.chatContainer
+
+        if (chatContainer) {
+          const scrollHeight = chatContainer.scrollHeight
+          const clientHeight = chatContainer.clientHeight
+
+          chatContainer.scrollTop = scrollHeight - clientHeight
+        }
+      })
+    },
+
     async sendMessage() {
       const response = await axios.post('/api/chat', {
         user_id: sessionStorage.getItem('user_id'),
@@ -95,15 +126,20 @@ export default {
         username: response.data.user.username,
         timestamp: new Date(),
         user_id: response.data.user.user_id,
+        image_path: response.data.user.image_path,
       })
       this.message = ''
+
+      setTimeout(() => {
+        this.scrollToBottom()
+      }, 50)
     },
 
     getStatus(msg) {
       if (msg.user_id === parseInt(this.loggedInUser)) {
-        return 'Delivered'
+        return 'Skickat'
       } else {
-        return 'Received'
+        return 'Mottaget'
       }
     },
 
@@ -113,10 +149,8 @@ export default {
 
     async fetchLatestMessages() {
       try {
-        // Fetch the latest 10 messages from the server
         const response = await axios.get('/api/chat/latest')
 
-        // Update the state with the fetched messages
         state.messages = response.data.messages
       } catch (error) {
         console.error('Error fetching latest messages:', error)
@@ -124,11 +158,10 @@ export default {
     },
     async fetchNextMessages() {
       try {
-        const offset = this.messages.length // Calculate the offset based on the current number of messages
+        const offset = this.messages.length
 
         const response = await axios.get(`/api/chat/latest?offset=${offset}`)
-
-        // Append the fetched messages to the existing messages
+        console.log('Received Messages:', response.data.messages)
         state.messages = [...response.data.messages, ...state.messages]
       } catch (error) {
         console.error('Error fetching messages:', error)
@@ -137,22 +170,3 @@ export default {
   },
 }
 </script>
-<style scoped>
-/* .chat-container {
-  position: relative;
-  min-height: 100vh;
-} --> */
-
-.chat-input-container {
-  background-color: rgba(255, 255, 255, 0);
-}
-
-/* <!-- .chat-input-container input,
-.chat-input-container button {
-  margin: 0;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
-} --> */
-</style>
