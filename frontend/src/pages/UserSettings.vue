@@ -16,6 +16,7 @@
       </div>
       <div>
         <p class="text-xl">Ny profilbild</p>
+        <p>Välj en kvadratisk bild</p>
         <input type="file" ref="fileInput" accept="image/*" />
         <div
           class="btn btn-xs btn-neutral btn-xs m-1 relative left-48"
