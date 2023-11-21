@@ -12,7 +12,7 @@ client.connect();
 
 router.put("/", async (req, res) => {
   console.log("Put request");
-  const { id, value, label } = req.body;
+  const { id, value, label, path } = req.body;
 
   if (label === "Name") {
     await client.query("UPDATE users SET name = $1 WHERE user_id = $2", [
@@ -56,6 +56,18 @@ router.put("/", async (req, res) => {
 
     await client.query("UPDATE users SET password = $1 WHERE user_id = $2", [
       hashedPassword,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+
+  if (label === "image_path") {
+    await client.query("UPDATE users SET image_path = $1 WHERE user_id = $2", [
+      path,
       id,
     ]);
     const { rows } = await client.query(

@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const sharp = require("sharp");
 const path = require("path");
 const { Client } = require("pg");
+const { log } = require("console");
 
 const client = new Client({
   connectionString: process.env.PGURI,
@@ -22,14 +24,15 @@ const upload = multer({ storage: storage });
 
 router.post("/upload", upload.single("image"), (req, res) => {
   console.log("File uploaded");
-  console.log(req.file);
+  const { id } = req.body;
   res.send();
+  sharp(req.file.path)
+    .resize({ width: 100 })
+    .toFile("uploads/avatar" + id + ".jpg");
 });
 
 router.get("/image/:filename", (req, res) => {
   const filename = req.params.filename;
-  console.log(filename);
-
   const imagePath = path.join(process.cwd(), "uploads", filename);
   res.set("Content-Type", "image/jpeg");
   res.sendFile(imagePath);

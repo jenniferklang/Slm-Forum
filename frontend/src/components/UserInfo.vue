@@ -13,7 +13,7 @@
       class="btn btn-xs btn-neutral btn-xs m-1 relative left-64"
       @click="updateUser"
     >
-      Change
+      Ändra
     </div>
   </div>
 </template>
