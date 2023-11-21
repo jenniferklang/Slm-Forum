@@ -2,6 +2,12 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const { Client } = require("pg");
+
+const client = new Client({
+  connectionString: process.env.PGURI,
+});
+client.connect();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

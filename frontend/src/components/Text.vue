@@ -37,6 +37,7 @@ export default {
     axios
       .get("/api/uploads/image/hund.jpg", { responseType: "blob" })
       .then((response) => {
+        console.log(response.data);
         const url = URL.createObjectURL(new Blob([response.data]));
         this.imageUrl = url;
       })
