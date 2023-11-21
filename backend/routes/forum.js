@@ -9,6 +9,42 @@ const client = new Client({
 });
 client.connect();
 
+router.get("/", async (request, response) => {
+  try {
+    const page = parseInt(request.query.page) || 1;
+    const pageSize = 1000;
+    const offset = Math.max(0, (page - 1) * pageSize);
+
+    const query = `
+      SELECT *
+      FROM topics
+      LEFT JOIN posts ON topics.topic_id = posts.topic
+      ORDER BY topics.topic_id DESC
+      LIMIT $1 OFFSET $2;
+    `;
+
+    const { rows } = await client.query(query, [pageSize, offset]);
+    response.send(rows);
+  } catch (error) {
+    console.error("Error fetching topics:", error);
+    response.status(500).send("Internal Server Error");
+  }
+});
+
+module.exports = router;
+
+/*
+const express = require("express");
+const router = express.Router();
+const { Client } = require("pg");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const client = new Client({
+  connectionString: process.env.PGURI,
+});
+client.connect();
+
 router.get("/", async (_request, response) => {
   try {
     const query = `
@@ -24,7 +60,8 @@ router.get("/", async (_request, response) => {
     response.status(500).send("Internal Server Error");
   }
 });
-/*
+
+
 //Har lånat post från Viktor för att testa
 router.post("/", async (request, response) => {
   const { title, created_by, content } = request.body;
@@ -61,6 +98,6 @@ router.post("/", async (request, response) => {
       error: error.message,
     });
   }
-});
-*/
+});*/
+
 module.exports = router;
