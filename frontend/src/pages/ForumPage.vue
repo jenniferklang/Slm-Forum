@@ -33,19 +33,19 @@
             <th class="marked-btn" @click="sortByName">
               Ämne
               <span v-if="currentSort === 'title'">{{
-                sortOrder === "asc" ? "▲" : "▼"
+                sortOrder === 'asc' ? '▲' : '▼'
               }}</span>
             </th>
             <th class="marked-btn" @click="sortByContent">
               Innehåll
               <span v-if="currentSort === 'post'">{{
-                sortOrder === "asc" ? "▲" : "▼"
+                sortOrder === 'asc' ? '▲' : '▼'
               }}</span>
             </th>
             <th class="marked-btn" @click="sortBy('created_at')">
               Publicerad
               <span v-if="currentSort === 'created_at'">{{
-                sortOrder === "asc" ? "▲" : "▼"
+                sortOrder === 'asc' ? '▲' : '▼'
               }}</span>
             </th>
           </tr>
@@ -95,8 +95,8 @@
 </template>
 
 <script>
-import axios from "axios";
-import moment from "moment";
+import axios from 'axios';
+import moment from 'moment';
 
 export default {
   data() {
@@ -105,18 +105,18 @@ export default {
       sortedTopics: [],
       currentPage: 1,
       itemsPerPage: 10,
-      searchTopic: "",
-      sortOrder: "desc",
-      currentSort: "created_at",
+      searchTopic: '',
+      sortOrder: 'desc',
+      currentSort: 'created_at',
       heroImage: null,
       heroImageUrl:
-        "https://images.pexels.com/photos/1309766/pexels-photo-1309766.jpeg?auto=compress&cs=tinysrgb&w=400",
+        'https://images.pexels.com/photos/1309766/pexels-photo-1309766.jpeg?auto=compress&cs=tinysrgb&w=400',
     };
   },
   computed: {
     heroStyle() {
       return {
-        backgroundImage: this.heroImage ? `url(${this.heroImage})` : "none",
+        backgroundImage: this.heroImage ? `url(${this.heroImage})` : 'none',
       };
     },
     paginatedTopics() {
@@ -138,17 +138,17 @@ export default {
       const page = this.currentPage;
       const pageSize = this.itemsPerPage;
       axios
-        .get("/api/forum", {
+        .get('/api/forum', {
           withCredentials: true,
           params: { page, pageSize },
         })
         .then((response) => {
-          console.log("Response data:", response.data);
+          // console.log("Response data:", response.data);
           this.topicsData = response.data;
           this.sortByName();
         })
         .catch((error) => {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching data:', error);
         });
     },
     applyFilters() {
@@ -159,7 +159,7 @@ export default {
         : this.topicsData;
 
       this.sortedTopics = searchFilteredTopics.slice().sort((a, b) => {
-        return a["title"].localeCompare(b["title"]);
+        return a['title'].localeCompare(b['title']);
       });
     },
     calculateTopicNumber(index) {
@@ -170,15 +170,15 @@ export default {
     //Man kan även köra install moment moment/locale/sv
     formatDate(dateString) {
       const postDate = moment(dateString);
-      const today = moment().startOf("day");
-      const yesterday = moment().subtract(1, "days").startOf("day");
+      const today = moment().startOf('day');
+      const yesterday = moment().subtract(1, 'days').startOf('day');
 
-      if (postDate.isSame(today, "d")) {
-        return "Idag " + postDate.format("HH:mm");
-      } else if (postDate.isSame(yesterday, "d")) {
-        return "Igår " + postDate.format("HH:mm");
+      if (postDate.isSame(today, 'd')) {
+        return 'Idag ' + postDate.format('HH:mm');
+      } else if (postDate.isSame(yesterday, 'd')) {
+        return 'Igår ' + postDate.format('HH:mm');
       } else if (postDate.isBefore(yesterday)) {
-        return postDate.format("MMM DD HH:mm");
+        return postDate.format('MMM DD HH:mm');
       } else {
         return postDate.calendar();
       }
@@ -193,27 +193,27 @@ export default {
     },
 
     sortByName() {
-      this.sortBy("title");
+      this.sortBy('title');
       this.applyFilters();
     },
     sortByContent() {
-      this.sortBy("post");
+      this.sortBy('post');
       this.applyFilters();
     },
     //Jennifer, du får kolla över denna igen..
     sortBy(property) {
-      this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
 
       const sortedByDate = [...this.topicsData].sort((a, b) => {
-        return this.sortOrder === "asc"
-          ? new Date(a["created_at"]) - new Date(b["created_at"])
-          : new Date(b["created_at"]) - new Date(a["created_at"]);
+        return this.sortOrder === 'asc'
+          ? new Date(a['created_at']) - new Date(b['created_at'])
+          : new Date(b['created_at']) - new Date(a['created_at']);
       });
 
       this.sortedTopics = sortedByDate.sort((a, b) => {
-        const order = this.sortOrder === "asc" ? 1 : -1;
+        const order = this.sortOrder === 'asc' ? 1 : -1;
 
-        if (property === "created_at") {
+        if (property === 'created_at') {
           return order * (new Date(b[property]) - new Date(a[property]));
         } else {
           return order * a[property].localeCompare(b[property]);
