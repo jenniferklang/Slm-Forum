@@ -1,15 +1,16 @@
 <template>
   <div>
-    <h1>{{ topic.title }}</h1>
-    <p>Topic created by: {{ topic.topic_created_by }}</p>
-    <p>Topic created at: {{ formatDate(topic.topic_created_at) }}</p>
+    <h1>{{ topic.topic_title }} <span>Topic created by: {{ topic.topic_created_by }} at {{ formatDate(topic.topic_created_at) }}</span></h1>
 
-    <div v-for="post in sortedPosts" :key="post.post_id">
-      <p>{{ post.content }}</p>
-      <p>Post created by: {{ post.post_created_by }}</p>
-      <p>Post created at: {{ formatDate(post.post_created_at) }}</p>
+
+
+    <div v-for="(post, index) in posts" :key="index">
+      <p>{{ post.post_content }} <span> by: {{ post.post_created_by }} at {{ formatDate(post.post_created_at) }}</span></p>
+
+
       <hr />
     </div>
+
     <CreatePost />
   </div>
 </template>
@@ -20,23 +21,19 @@ import axios from 'axios';
 
 export default {
   props: {
-    topicId: String,
+    topicId: Number,
   },
   components: { CreatePost },
   data() {
     return {
-      topic: {},
+      topic: {}, // Initialize an empty object for the topic
       posts: [],
     };
   },
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(
-          `/api/thread/${this.$route.params.topicId}`
-        );
-        console.log(response.data);
-        console.log('Topic ID:', topicId);
+        const response = await axios.get(`/api/thread/${parseInt(this.$route.params.topicId)}`);
         this.topic = response.data[0];
         this.posts = response.data.slice(1);
       } catch (error) {
@@ -50,13 +47,10 @@ export default {
   },
   computed: {
     sortedPosts() {
-      return this.posts.sort(
-        (a, b) => new Date(a.post_created_at) - new Date(b.post_created_at)
-      );
+      return this.posts.sort((a, b) => new Date(a.post_created_at) - new Date(b.post_created_at));
     },
   },
   mounted() {
-    console.log(this.$route.params.topicId);
     this.fetchData();
   },
 };
