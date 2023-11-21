@@ -77,6 +77,7 @@ router.delete("/", async (req, res) => {
     []
   );
   console.log(`User with id ${id} deleted!`);
+  res.clearCookie("token");
   res.send(rows);
 });
 

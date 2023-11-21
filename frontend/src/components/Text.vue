@@ -20,44 +20,44 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { socket, state } from '../socket';
+import axios from "axios";
+import { socket, state } from "../socket";
 
 export default {
   data() {
     return {
       socket: null,
       messages: [],
-      newMessage: '',
+      newMessage: "",
       imageUrl: null,
     };
   },
   computed() {},
   mounted() {
     axios
-      .get('/api/uploads/image/Johan.jpg', { responseType: 'blob' })
+      .get("/api/uploads/image/hund.jpg", { responseType: "blob" })
       .then((response) => {
         const url = URL.createObjectURL(new Blob([response.data]));
         this.imageUrl = url;
       })
       .catch((error) => {
-        console.error('Error vid hämtning av bild:', error);
+        console.error("Error vid hämtning av bild:", error);
       });
   },
   methods: {
     // Skicka/emitta meddelande till servern
     async sendMessage() {
-      const response = await axios.post('/api', {
-        user_id: sessionStorage.getItem('user_id'),
+      const response = await axios.post("/api", {
+        user_id: sessionStorage.getItem("user_id"),
       });
-      console.log('RESPONSE_: ', response.data);
+      console.log("RESPONSE_: ", response.data);
 
-      this.socket.emit('chat message', {
+      this.socket.emit("chat message", {
         text: this.newMessage,
         username: response.data.username,
         id: Date.now(),
       });
-      this.newMessage = '';
+      this.newMessage = "";
     },
 
     uploadImage() {
@@ -65,10 +65,10 @@ export default {
       const file = fileInput.files[0];
 
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append("image", file);
 
       axios
-        .post('/api/uploads/upload', formData)
+        .post("/api/uploads/upload", formData)
         .then((response) => {
           console.log(response.data);
         })

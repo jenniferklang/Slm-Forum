@@ -148,6 +148,7 @@ export default {
   methods: {
     setUser() {
       store.$patch({
+        userId: user.user_id,
         userRealName: user.name,
         userMail: user.mail,
         userName: user.username,
