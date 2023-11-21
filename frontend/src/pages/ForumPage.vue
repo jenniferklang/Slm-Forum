@@ -58,7 +58,7 @@
               <router-link
                 :to="{
                   name: 'followThread',
-                  params: { topicId: topic.title },
+                  params: { topicId: topic.topic_id },
                 }"
               >
                 {{ topic.title }}

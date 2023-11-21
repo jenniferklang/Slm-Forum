@@ -5,7 +5,7 @@
 <script>
 export default {
   props: {
-    topicId: String,
+    topicId: Number,
   },
 };
 </script>
