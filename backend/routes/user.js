@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Client } = require("pg");
+const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -11,14 +12,59 @@ client.connect();
 
 router.put("/", async (req, res) => {
   console.log("Put request");
-  const { id, updatedName } = req.body;
-  console.log(id, updatedName);
-  await client.query("UPDATE users SET userName = $1 WHERE user_id = $2", [
-    updatedName,
-    id,
-  ]);
-  const { rows } = await client.query("SELECT * FROM users", []);
-  res.send(rows);
+  const { id, value, label } = req.body;
+
+  if (label === "Name") {
+    await client.query("UPDATE users SET name = $1 WHERE user_id = $2", [
+      value,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+
+  if (label === "Email") {
+    await client.query("UPDATE users SET mail = $1 WHERE user_id = $2", [
+      value,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+
+  if (label === "Username") {
+    await client.query("UPDATE users SET username = $1 WHERE user_id = $2", [
+      value,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+
+  if (label === "Password") {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(value, saltRounds);
+
+    await client.query("UPDATE users SET password = $1 WHERE user_id = $2", [
+      hashedPassword,
+      id,
+    ]);
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [id]
+    );
+    res.send(rows);
+  }
+  console.log("User Information Updated");
 });
 
 router.delete("/", async (req, res) => {

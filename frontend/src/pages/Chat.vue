@@ -1,136 +1,158 @@
 <template>
-  <div class="w-[50%] mx-auto">
+  <div class="flex flex-col justify-center items-center">
     <div
-      v-for="(msg, index) in messages"
-      :key="index"
-      :class="
-        msg.user_id === parseInt(loggedInUser)
-          ? 'chat-end ml-auto'
-          : 'chat-start mr-auto'
-      "
-      class="border-base-300 bg-base-100 rounded-b-box rounded-se-box flex min-h-[6rem] min-w-[10rem] flex-wrap flex-col justify-center gap-2 bg-top p-4 max-w-[15rem]"
+      class="w-[50%] mx-auto h-[80vh] overflow-scroll bg-gray-300 rounded-xl relative"
     >
-      <div class="chat-header">
-        {{ msg.username }}
-        <time class="text-xs opacity-50">{{ getTimeAgo(msg.timestamp) }}</time>
+      <div
+        v-for="(msg, index) in messages"
+        :key="index"
+        :class="
+          msg.user_id === parseInt(loggedInUser)
+            ? 'chat-end ml-auto'
+            : 'chat-start mr-auto'
+        "
+        class="border-base-300 rounded-b-box rounded-se-box flex min-h-[6rem] min-w-[10rem] max-w-4xl flex-wrap flex-col justify-center gap-2 bg-top p-4 max-w-[15rem]"
+      >
+        <div class="chat-header">
+          {{ msg.username }}
+          <time class="text-xs opacity-50">{{
+            getTimeAgo(msg.timestamp)
+          }}</time>
+        </div>
+
+        <div class="chat-bubble">{{ msg.message }}</div>
+        <div class="chat-footer opacity-50">{{ getStatus(msg) }}</div>
       </div>
-
-      <div class="chat-bubble">{{ msg.message }}</div>
-      <div class="chat-footer opacity-50">{{ getStatus(msg) }}</div>
     </div>
-
-    <div class="chat-input-container">
+    <div class="flex w-[100%] justify-center items-center mt-10 gap-5">
       <input
         v-model="message"
         @keyup.enter="sendMessage"
-        placeholder="Type a message"
-        class="p-2 border rounded w-44"
+        placeholder="Skriv ett meddelande"
+        class="p-2 border grow-1"
       />
       <button
         @click="sendMessage"
-        class="p-2 bg-blue-500 text-white rounded block"
+        class="p-2 bg-blue-500 text-white rounded grow-0"
       >
-        Send
+        Skicka
+      </button>
+      <button
+        @click="fetchNextMessages"
+        class="p-2 bg-blue-500 text-white rounded grow-0"
+      >
+        Nya msg
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
-import axios from 'axios';
+import moment from 'moment'
+import axios from 'axios'
 
-import { socket, state } from '../socket';
+import { socket, state } from '../socket'
 
 export default {
   data() {
     return {
       message: '',
       username: '',
-    };
+    }
   },
 
   mounted() {
-    console.log('Logged in user:', this.loggedInUser);
-    this.socket = socket;
-
-    this.socket.on('user disconnected', (socketId) => {
-      console.log('User disconnected:', socketId);
-    });
+    this.fetchLatestMessages()
   },
 
   computed: {
     loggedInUser() {
-      return sessionStorage.getItem('user_id');
+      return sessionStorage.getItem('user_id')
     },
 
     connected() {
-      return state.connected;
+      return state.connected
     },
 
     users() {
-      return state.users;
+      return state.users
     },
 
     messages() {
-      return state.messages;
+      return state.messages
     },
   },
 
   methods: {
     async sendMessage() {
-      const response = await axios.post('/api', {
+      const response = await axios.post('/api/chat', {
         user_id: sessionStorage.getItem('user_id'),
-      });
-
+        message: this.message,
+      })
+      console.log('First Message:', this.message)
       socket.emit('chat message', {
         message: this.message,
         username: response.data.user.username,
         timestamp: new Date(),
-        status: 'Delivered',
         user_id: response.data.user.user_id,
-      });
-      this.message = '';
+      })
+      this.message = ''
     },
 
     getStatus(msg) {
-      if (msg.username !== this.loggedInUser) {
-        return msg.status === 'Delivered' ? 'Received' : msg.status;
+      if (msg.user_id === parseInt(this.loggedInUser)) {
+        return 'Delivered'
+      } else {
+        return 'Received'
       }
-      return msg.status;
     },
 
     getTimeAgo(timestamp) {
-      return moment(timestamp).fromNow();
+      return moment(timestamp).fromNow()
+    },
+
+    async fetchLatestMessages() {
+      try {
+        // Fetch the latest 10 messages from the server
+        const response = await axios.get('/api/chat/latest')
+
+        // Update the state with the fetched messages
+        state.messages = response.data.messages
+      } catch (error) {
+        console.error('Error fetching latest messages:', error)
+      }
+    },
+    async fetchNextMessages() {
+      try {
+        const offset = this.messages.length // Calculate the offset based on the current number of messages
+
+        const response = await axios.get(`/api/chat/latest?offset=${offset}`)
+
+        // Append the fetched messages to the existing messages
+        state.messages = [...response.data.messages, ...state.messages]
+      } catch (error) {
+        console.error('Error fetching messages:', error)
+      }
     },
   },
-};
+}
 </script>
 <style scoped>
-.chat-container {
+/* .chat-container {
   position: relative;
-  min-height: 100vh; /* Ensure the container takes at least the full height of the viewport */
-}
+  min-height: 100vh;
+} --> */
 
 .chat-input-container {
-  position: sticky;
-  bottom: 0;
-  padding: 10px;
-  display: flex;
-  align-items: center;
   background-color: rgba(255, 255, 255, 0);
-  z-index: 1; /* Set z-index to make sure it stays above other elements */
-  margin-top: auto; /* Push the container to the top of the available space */
 }
 
-.chat-input-container input,
+/* <!-- .chat-input-container input,
 .chat-input-container button {
   margin: 0;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-right: 10px;
-}
-
-/* Your component-specific styles here */
+} --> */
 </style>

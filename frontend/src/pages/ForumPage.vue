@@ -14,10 +14,13 @@
           </div>
         </div>
       </div>
+      <router-link to="/posttopic">
+        <button class="btn">Nytt ämne</button>
+      </router-link>
       <div class="custom-input-container">
         <input
           type="text"
-          placeholder="Search topic"
+          placeholder="Sök ämne"
           class="input input-bordered w-full max-w-xs custom-input-style"
           v-model="searchTopic"
           @input="applyFilters"
@@ -27,16 +30,41 @@
         <thead>
           <tr>
             <th></th>
-            <th>Topic</th>
-            <th>Content</th>
-            <th>Posted At</th>
+            <th class="marked-btn" @click="sortByName">
+              Ämne
+              <span v-if="currentSort === 'title'">{{
+                sortOrder === "asc" ? "▲" : "▼"
+              }}</span>
+            </th>
+            <th class="marked-btn" @click="sortByContent">
+              Innehåll
+              <span v-if="currentSort === 'post'">{{
+                sortOrder === "asc" ? "▲" : "▼"
+              }}</span>
+            </th>
+            <th class="marked-btn" @click="sortBy('created_at')">
+              Publicerad
+              <span v-if="currentSort === 'created_at'">{{
+                sortOrder === "asc" ? "▲" : "▼"
+              }}</span>
+            </th>
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="(topic, index) in paginatedTopics" :key="topic.id">
             <th>{{ calculateTopicNumber(index) }}</th>
-            <td>{{ topic.title }}</td>
-            <td>{{ topicContent(topic) }}</td>
+            <td>
+              <router-link
+                :to="{
+                  name: 'followThread',
+                  params: { topicId: topic.title },
+                }"
+              >
+                {{ topic.title }}
+              </router-link>
+            </td>
+            <td>{{ topic.content }}</td>
             <td>{{ formatDate(topic.created_at) }}</td>
           </tr>
         </tbody>
@@ -49,18 +77,18 @@
         @click="goToPage(currentPage - 1)"
         :disabled="currentPage === 1"
       >
-        Previous
+        Föregående
       </button>
       <div class="pagination-center">
-        <button class="btn" @click="sortByName">Sort by letter</button>
-        <button class="btn" @click="sortBy('created_at')">Sort by date</button>
+        <!--<button class="btn" @click="sortByName">Sök bokstav</button>-->
+        <!--<button class="btn" @click="sortBy('created_at')">Sök datum</button>-->
       </div>
       <button
         class="btn"
         @click="goToPage(currentPage + 1)"
         :disabled="currentPage === totalPages"
       >
-        Next
+        Nästa
       </button>
     </div>
   </div>
@@ -78,6 +106,8 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       searchTopic: "",
+      sortOrder: "desc",
+      currentSort: "created_at",
     };
   },
   computed: {
@@ -151,17 +181,29 @@ export default {
       this.sortBy("title");
       this.applyFilters();
     },
+    sortByContent() {
+      this.sortBy("post");
+      this.applyFilters();
+    },
+    //Jennifer, du får kolla över denna igen..
     sortBy(property) {
-      this.sortedTopics = [...this.topicsData].sort((a, b) => {
+      this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
+
+      const sortedByDate = [...this.topicsData].sort((a, b) => {
+        return this.sortOrder === "asc"
+          ? new Date(a["created_at"]) - new Date(b["created_at"])
+          : new Date(b["created_at"]) - new Date(a["created_at"]);
+      });
+
+      this.sortedTopics = sortedByDate.sort((a, b) => {
+        const order = this.sortOrder === "asc" ? 1 : -1;
+
         if (property === "created_at") {
-          return new Date(b[property]) - new Date(a[property]);
+          return order * (new Date(b[property]) - new Date(a[property]));
         } else {
-          return a[property].localeCompare(b[property]);
+          return order * a[property].localeCompare(b[property]);
         }
       });
-    },
-    topicContent(topic) {
-      return topic.post ? topic.post.content : "No content available";
     },
   },
   mounted() {
@@ -212,5 +254,10 @@ export default {
 
 .table {
   margin-bottom: 50px;
+}
+
+.marked-btn {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

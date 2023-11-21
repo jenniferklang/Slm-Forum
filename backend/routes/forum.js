@@ -24,8 +24,8 @@ router.get("/", async (_request, response) => {
     response.status(500).send("Internal Server Error");
   }
 });
-
-//Har lånat post från Viktor
+/*
+//Har lånat post från Viktor för att testa
 router.post("/", async (request, response) => {
   const { title, created_by, content } = request.body;
 
@@ -62,5 +62,5 @@ router.post("/", async (request, response) => {
     });
   }
 });
-
+*/
 module.exports = router;
