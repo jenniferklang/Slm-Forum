@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import CreatePost from '../components/CreatePost.vue';
-import axios from 'axios';
+import CreatePost from "../components/CreatePost.vue";
+import axios from "axios";
 
 export default {
   props: {
@@ -38,7 +38,7 @@ export default {
         this.topic = response.data[0];
         this.posts = response.data;
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     },
     formatDate(timestamp) {
@@ -48,7 +48,9 @@ export default {
   },
   computed: {
     sortedPosts() {
-      return this.posts.sort((a, b) => new Date(a.post_created_at) - new Date(b.post_created_at));
+      return this.posts.sort(
+        (a, b) => new Date(a.post_created_at) - new Date(b.post_created_at)
+      );
     },
   },
   mounted() {

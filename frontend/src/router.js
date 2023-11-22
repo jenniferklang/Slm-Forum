@@ -3,9 +3,13 @@ import axios from 'axios';
 
 const routes = [
   {
-    name: 'home',
-    path: '/',
+    path: '/test',
     component: () => import('./components/Test.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/',
+    component: () => import('./pages/ForumPage.vue'),
     meta: { requiresAuth: true },
   },
   {
@@ -32,12 +36,11 @@ const routes = [
     component: () => import('./pages/ForumPage.vue'),
     meta: { requiresAuth: true },
   },
-
   {
     path: '/followthread/:topicId',
     name: 'followThread',
     component: () => import('./pages/FollowThread.vue'),
-    props: true,
+    meta: { requiresAuth: true },
   },
   {
     path: '/chat',
@@ -55,6 +58,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  console.log(to);
   if (to.meta.requiresAuth) {
     const isTokenValid = await checkToken();
     // console.log('isTokenValid: ', isTokenValid);

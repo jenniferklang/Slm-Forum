@@ -12,6 +12,7 @@ watch(
   pinia.state,
   (state) => {
     localStorage.setItem('user', JSON.stringify(state.user));
+    localStorage.setItem('newMessages', JSON.stringify(state.newMessages));
   },
   { deep: true }
 );
