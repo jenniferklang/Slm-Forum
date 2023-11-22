@@ -8,4 +8,4 @@ export default {
   daisyui: {
     themes: ["light", "fantasy", "pastel"],
   },
-};
+}
