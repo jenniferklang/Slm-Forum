@@ -2,16 +2,12 @@
   <div>
     <h1>{{ topic.topic_title }} <span>Topic created by: {{ topic.topic_created_by }} at {{ formatDate(topic.topic_created_at) }}</span></h1>
 
-
-
-    <div v-for="(post, index) in posts" :key="index">
-      <p>{{ post.post_content }} <span> by: {{ post.post_created_by }} at {{ formatDate(post.post_created_at) }}</span></p>
-
-
+    <div v-for="(post, index) in sortedPosts" :key="index">
+      <p>{{ post.post_content }} <span> by: {{ post.post_created_by ? post.post_created_by : 'dig' }} at {{ post.post_created_at ? formatDate(post.post_created_at) : 'precis nu' }}</span></p>
       <hr />
     </div>
 
-    <CreatePost />
+    <CreatePost @postSubmitted="handlePostSubmitted" />
   </div>
 </template>
 
@@ -26,16 +22,21 @@ export default {
   components: { CreatePost },
   data() {
     return {
-      topic: {}, // Initialize an empty object for the topic
+      topic: {},
       posts: [],
     };
   },
   methods: {
+    handlePostSubmitted(newPostContent) {
+
+      this.posts.push({ post_content: newPostContent });
+    },
     async fetchData() {
       try {
         const response = await axios.get(`/api/thread/${parseInt(this.$route.params.topicId)}`);
+        console.log(response)
         this.topic = response.data[0];
-        this.posts = response.data.slice(1);
+        this.posts = response.data;
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -51,6 +52,7 @@ export default {
     },
   },
   mounted() {
+
     this.fetchData();
   },
 };
