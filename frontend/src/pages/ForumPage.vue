@@ -5,12 +5,12 @@
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">Let's talk</h1>
+            <h1 class="mb-5 text-5xl font-bold">Rensa luften</h1>
             <p class="mb-5">
-              The ultimate destination for meaningful conversations and vibrant
-              discussions!
+              Den ultimata destinationen för meningsfulla konversationer och
+              livliga diskussioner!
             </p>
-            <p>Ready to share? Let's talk!</p>
+            <p>Redo att dela med dig? Rensa luften!</p>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
                 {{ topic.title }}
               </router-link>
             </td>
-            <td>{{ topic.content }}</td>
+            <td>{{ limitedContent(topic.content, 60) }}</td>
             <td>{{ formatDate(topic.created_at) }}</td>
           </tr>
         </tbody>
@@ -133,6 +133,7 @@ export default {
   mounted() {
     this.fetchTopics();
     this.preloadImage(this.heroImageUrl);
+    this.sortBy("created_at");
   },
   methods: {
     fetchTopics() {
@@ -144,12 +145,21 @@ export default {
           params: { page },
         })
         .then((response) => {
-          this.topicsData = response.data;
+          // Uppdatera ordningen på ämnena här
+          this.topicsData = response.data.reverse();
           this.sortByName();
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
+    },
+
+    limitedContent(content, maxLength) {
+      if (content.length > maxLength) {
+        return content.substring(0, maxLength) + "...";
+      } else {
+        return content;
+      }
     },
 
     goToPage(pageNumber) {
