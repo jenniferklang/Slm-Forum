@@ -19,7 +19,7 @@
         <p>Välj en kvadratisk bild</p>
         <input type="file" ref="fileInput" accept="image/*" />
         <div
-          class="btn btn-xs btn-neutral btn-xs m-1 relative left-48"
+          class="btn btn-xs btn-neutral m-1 relative left-48"
           @click="uploadImage"
         >
           Ladda upp profilbild
@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import axios from "axios";
-import { ref } from "vue";
-import UserInfo from "../components/UserInfo.vue";
-import { useActiveUser } from "/stores/userStore";
+import axios from 'axios';
+import { ref } from 'vue';
+import UserInfo from '../components/UserInfo.vue';
+import { useActiveUser } from '/stores/userStore';
 const store = useActiveUser();
 
 let userImagePath = ref();
@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       user: useActiveUser(),
-      id: sessionStorage.getItem("user_id"),
+      id: sessionStorage.getItem('user_id'),
       imageUrl: null,
     };
   },
@@ -66,21 +66,21 @@ export default {
       const file = fileInput.files[0];
 
       const formData = new FormData();
-      formData.append("image", file);
-      formData.append("id", this.id);
+      formData.append('image', file);
+      formData.append('id', this.id);
 
       axios
-        .post("/api/uploads/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        .post('/api/uploads/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) => {
           console.log(response.data);
           axios
             .put(
-              "/api/user",
+              '/api/user',
               {
                 id: this.id,
-                label: "image_path",
+                label: 'image_path',
                 path: `/api/uploads/image/avatar${this.id}.jpg`,
               },
               { withCredentials: true }
@@ -115,7 +115,7 @@ export default {
           console.log(response);
         })
         .then(() => {
-          this.$router.push({ path: "/" });
+          this.$router.push({ path: '/' });
         })
         .catch((error) => {
           console.log(error);
@@ -125,14 +125,14 @@ export default {
   mounted() {
     axios
       .get(store.userImage, {
-        responseType: "blob",
+        responseType: 'blob',
       })
       .then((response) => {
         const url = URL.createObjectURL(new Blob([response.data]));
         this.imageUrl = url;
       })
       .catch((error) => {
-        console.error("Error vid hämtning av bild:", error);
+        console.error('Error vid hämtning av bild:', error);
       });
   },
 };

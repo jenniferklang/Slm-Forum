@@ -22,12 +22,9 @@
         </div>
         <div class="flex gap-3">
           <div
-            v-if="msg.user_id === parseInt(loggedInUser)"
-            class="chat-bubble mb-3 mr-1"
+            class="chat-image avatar"
+            v-if="msg.user_id !== parseInt(loggedInUser)"
           >
-            {{ msg.message }}
-          </div>
-          <div class="chat-image avatar">
             <div class="w-10 rounded-full">
               <img :alt="`Avatar of ${msg.username}`" :src="msg.image_path" />
             </div>
@@ -43,8 +40,16 @@
           >
             {{ msg.message }}
           </div>
-          <div class="chat-footer opacity-50">{{ getStatus(msg) }}</div>
+          <div
+            class="chat-image avatar"
+            v-if="msg.user_id === parseInt(loggedInUser)"
+          >
+            <div class="w-10 rounded-full">
+              <img :alt="`Avatar of ${msg.username}`" :src="msg.image_path" />
+            </div>
+          </div>
         </div>
+        <div class="chat-footer opacity-50">{{ getStatus(msg) }}</div>
       </div>
     </div>
     <!-- <div
@@ -113,6 +118,8 @@ export default {
     }, 100);
 
     this.$refs.chatContainer.addEventListener('scroll', () => {
+      this.oldHeight = this.$refs.chatContainer.scrollHeight;
+
       if (this.$refs.chatContainer.scrollTop === 0) {
         this.fetchNextMessages();
       }
