@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import CreatePost from '../components/CreatePost.vue';
-import axios from 'axios';
+import CreatePost from "../components/CreatePost.vue";
+import axios from "axios";
 
 export default {
   props: {
@@ -46,9 +46,9 @@ export default {
           `/api/thread/${parseInt(this.$route.params.topicId)}`
         );
         this.topic = response.data[0];
-        this.posts = response.data.slice(1);
+        this.posts = response.data;
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     },
     formatDate(timestamp) {
