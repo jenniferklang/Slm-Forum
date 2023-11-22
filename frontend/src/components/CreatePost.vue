@@ -30,7 +30,6 @@ export default {
 
       axios.post('/api/postTopics', postData)
         .then(response => {
-          console.log(response.data);
           this.$emit('postSubmitted', this.postContent);
           this.postContent = "";
 
