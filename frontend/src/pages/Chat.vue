@@ -29,7 +29,9 @@
               <img
                 :alt="`Avatar of ${msg.username}`"
                 :src="
-                  msg.image_path ? msg.image_path : '../../public/avatar.jpg'
+                  typeof msg.image_path === 'string'
+                    ? msg.image_path
+                    : '/avatar.jpg'
                 "
               />
             </div>
@@ -53,7 +55,9 @@
               <img
                 :alt="`Avatar of ${msg.username}`"
                 :src="
-                  msg.image_path ? msg.image_path : '../../public/avatar.jpg'
+                  typeof msg.image_path === 'string'
+                    ? msg.image_path
+                    : '/avatar.jpg'
                 "
               />
             </div>
