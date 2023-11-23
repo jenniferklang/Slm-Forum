@@ -109,11 +109,10 @@
 
     <dialog ref="error_modal" class="modal">
       <div class="modal-box">
-        <h3 class="font-bold text-lg">Nu har vi stött på ett problem!</h3>
-        <p class="py-4">{{ errorMessage }}</p>
+        <h3 class="font-bold text-lg">{{ modalTitle }}</h3>
+        <p class="py-4">{{ modalMessage }}</p>
         <div class="modal-action">
           <form method="dialog">
-            <!-- if there is a button in form, it will close the modal -->
             <button class="btn">Stäng</button>
           </form>
         </div>
@@ -140,7 +139,8 @@ export default {
       registerUsername: null,
       registerEmail: null,
       registerPassword: null,
-      errorMessage: null,
+      modalTitle: '',
+      modalMessage: '',
       privacyCheck: false,
     };
   },
@@ -176,7 +176,8 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          this.errorMessage = error.response.data.message;
+          this.modalTitle = 'Nu har vi stött på ett problem!';
+          this.modalMessage = error.response.data.message;
           this.$refs.error_modal.showModal();
         });
     },
@@ -194,17 +195,21 @@ export default {
             },
             { withCredentials: true }
           )
-          .then((response) => {
-            console.log(response);
+          .then(() => {
             this.setUser();
+            this.modalTitle = 'Konto skapat!';
+            this.modalMessage = 'Nu kan du logga in på sidan.';
+            this.$refs.error_modal.showModal();
           })
           .catch((error) => {
             console.log(error);
-            this.errorMessage = error.response.data.message;
+            this.modalTitle = 'Nu har vi stött på ett problem!';
+            this.modalMessage = error.response.data.message;
             this.$refs.error_modal.showModal();
           });
       } else {
-        this.errorMessage =
+        this.modalTitle = 'Nu har vi stött på ett problem!';
+        this.modalMessage =
           'Du måste godkänna integritetspolicyn för att kunna registrera dig!';
         this.$refs.error_modal.showModal();
       }

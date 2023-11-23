@@ -45,10 +45,12 @@ const routes = [
   {
     path: '/chat',
     component: () => import('./pages/Chat.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/posttopic',
     component: () => import('./pages/PostTopic.vue'),
+    meta: { requiresAuth: true },
   },
 ];
 
@@ -58,10 +60,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log(to);
   if (to.meta.requiresAuth) {
     const isTokenValid = await checkToken();
-    // console.log('isTokenValid: ', isTokenValid);
     if (isTokenValid) {
       next();
     } else {
@@ -73,15 +73,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function checkToken() {
-  const token = sessionStorage.getItem('jwt');
-
-  if (!token) {
-    return false;
-  }
-
   try {
-    const response = await axios.post('/api/auth/validate', { token });
-    console.log('Validate JWT response: ', response.data);
+    const response = await axios.get('/api/auth/validate');
     sessionStorage.setItem('user_id', response.data.userId);
     return response.data.valid;
   } catch (err) {

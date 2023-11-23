@@ -76,7 +76,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/validate', async (req, res) => {
+router.get('/validate', async (req, res) => {
   checkToken(req, res);
 });
 
