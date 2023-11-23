@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
     if (existingUser.rows.length > 0) {
       return res
         .status(400)
-        .json({ message: 'Användarnamn eller lösenord är redan registrerat.' });
+        .json({ message: 'Användarnamn eller email är redan registrerat.' });
     }
 
     const saltRounds = 10;

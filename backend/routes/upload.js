@@ -10,16 +10,6 @@ const client = new Client({
 });
 client.connect();
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/');
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
-// const upload = multer({ storage: storage });
-
 const storage = multer.memoryStorage();
 
 const filter = (req, file, cb) => {
@@ -37,10 +27,10 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 
   await sharp(req.file.buffer)
     .resize({ width: 100 })
-    .toFile(`uploads/${req.file.originalname}.jpg`);
+    .toFile(`uploads/${req.file.originalname}`);
 
   await client.query('UPDATE users SET image_path = $1 WHERE user_id = $2', [
-    `/api/uploads/${req.file.originalname}.jpg`,
+    `/api/uploads/avatar/${req.file.originalname}`,
     id,
   ]);
 

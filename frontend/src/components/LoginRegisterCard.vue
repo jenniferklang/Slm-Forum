@@ -173,7 +173,6 @@ export default {
           { withCredentials: true }
         )
         .then((response) => {
-          console.log(response.data);
           this.fetchedUser = response.data.user;
         })
         .then(() => {
@@ -183,7 +182,7 @@ export default {
         .catch((error) => {
           console.log(error);
           this.modalTitle = 'Nu har vi stött på ett problem!';
-          this.modalMessage = error.data.message;
+          this.modalMessage = error.response.data.message;
           this.$refs.error_modal.showModal();
         });
     },
@@ -202,7 +201,6 @@ export default {
             { withCredentials: true }
           )
           .then(() => {
-            this.setUser();
             this.modalTitle = 'Konto skapat!';
             this.modalMessage = 'Nu kan du logga in på sidan.';
             this.$refs.error_modal.showModal();

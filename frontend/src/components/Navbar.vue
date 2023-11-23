@@ -97,6 +97,7 @@
 import axios from 'axios';
 import { state, socket } from '../socket';
 import { useMessageStore } from '../../stores/messageStore';
+import { useActiveUser } from '../../stores/userStore';
 import { mapWritableState } from 'pinia';
 
 export default {
@@ -108,7 +109,7 @@ export default {
 
   computed: {
     loggedIn() {
-      if (sessionStorage.getItem('user_id') !== null) {
+      if (this.userId !== 0) {
         return true;
       } else {
         return false;
@@ -122,6 +123,7 @@ export default {
     },
 
     ...mapWritableState(useMessageStore, ['newMessage']),
+    ...mapWritableState(useActiveUser, ['userId']),
   },
 
   mounted() {
@@ -134,15 +136,11 @@ export default {
 
   methods: {
     logout() {
-      sessionStorage.clear();
+      this.userId = 0;
 
-      axios('api/auth/logout')
-        .then((response) => {
-          console.log(response.data);
-        })
-        .then(() => {
-          this.$router.push('/login');
-        });
+      axios('api/auth/logout').then(() => {
+        this.$router.push('/login');
+      });
     },
   },
 };

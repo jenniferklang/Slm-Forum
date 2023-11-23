@@ -26,7 +26,12 @@
             v-if="msg.user_id !== parseInt(loggedInUser)"
           >
             <div class="w-10 rounded-full">
-              <img :alt="`Avatar of ${msg.username}`" :src="msg.image_path" />
+              <img
+                :alt="`Avatar of ${msg.username}`"
+                :src="
+                  msg.image_path ? msg.image_path : '../../public/avatar.jpg'
+                "
+              />
             </div>
           </div>
 
@@ -45,7 +50,12 @@
             v-if="msg.user_id === parseInt(loggedInUser)"
           >
             <div class="w-10 rounded-full">
-              <img :alt="`Avatar of ${msg.username}`" :src="msg.image_path" />
+              <img
+                :alt="`Avatar of ${msg.username}`"
+                :src="
+                  msg.image_path ? msg.image_path : '../../public/avatar.jpg'
+                "
+              />
             </div>
           </div>
         </div>
