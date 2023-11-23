@@ -25,15 +25,6 @@ CREATE TABLE IF NOT EXISTS posts (
   FOREIGN KEY (topic) REFERENCES topics(topic_id)
 );
 
-CREATE TABLE IF NOT EXISTS comments (
-  comment_id serial PRIMARY KEY,
-  content text NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  created_by INTEGER NOT NULL,
-  post INTEGER NOT NULL,
-  FOREIGN KEY (created_by) REFERENCES users(user_id),
-  FOREIGN KEY (post) REFERENCES posts(post_id)
-);
 
 CREATE TABLE IF NOT EXISTS userTopics (
   user_id INTEGER NOT NULL,
@@ -42,32 +33,9 @@ CREATE TABLE IF NOT EXISTS userTopics (
   FOREIGN KEY (topic_id) REFERENCES topics(topic_id)
 );
 
-INSERT INTO users (name, mail, username, password, image_path) VALUES (
-  'John Doe',
-  'johndoe@example.com',
-  'johndoe',
-  'password',
-  NULL
-);
-
-INSERT INTO topics (title, created_by) VALUES
-  ('Hello World Topic', 1),
-  ('Hello World Topic 2', 1),
-  ('Hello World Topic 3', 1);
-
-INSERT INTO posts (content, created_by, topic) VALUES (
-  'Hello World Content!',
-  1,
-  1
-);
-
-INSERT INTO comments (content, created_by, post) VALUES (
-  'Hello World!',
-  1,
-  1
-);
-
-INSERT INTO userTopics (user_id, topic_id) VALUES (
-  1,
-  1
+CREATE TABLE IF NOT EXISTS messages (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(user_id),
+  message TEXT,
+  timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
