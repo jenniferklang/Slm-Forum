@@ -23,6 +23,11 @@ export default {
   },
   methods: {
     submitForm() {
+      if (!this.postContent.trim()){
+        alert("Din post är tom. Skriv ett inlägg först.")
+        return;
+      }
+
       const postData = {
         topic_id: this.topicId,
         content: this.postContent

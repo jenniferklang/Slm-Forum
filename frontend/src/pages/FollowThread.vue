@@ -1,4 +1,9 @@
 <template>
+  <div class="buttonContainer">
+  <router-link to="/forum">
+        <button class="btn mt-4">Tillbaka till forumet</button>
+      </router-link>
+    </div>
   <div class="forumContainer">
     <div class="created">Startad av: {{ topic.topic_created_by }} Datum {{ formatDate(topic.topic_created_at) }}</div>
     <h1>{{ topic.topic_title }} </h1>
@@ -73,6 +78,10 @@ export default {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+  .buttonContainer{
+    max-width: 800px;
+    margin: 20px auto;
+  }
 
   h1 {
     font-size: 24px;
@@ -106,4 +115,5 @@ export default {
   .createPostContainer {
     margin-top: 20px;
   }
+
 </style>

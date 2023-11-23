@@ -29,6 +29,10 @@ export default {
   },
   methods: {
     submitForm() {
+      if (!this.topicTitle.trim() || !this.postContent.trim()) {
+        alert("Båda textfälten måste fyllas i.");
+        return;
+      }
       const postData = {
         title: this.topicTitle,
         content: this.postContent
