@@ -11,7 +11,7 @@
         <div v-else class="w-16 h-16 rounded-full bg-primary m-5"></div>
         <div class="m-5">
           <h2 class="card-title">Mitt konto</h2>
-          <div>{{ user.userName }}</div>
+          <div>{{ user.userRealName }}</div>
         </div>
       </div>
       <div>
@@ -37,19 +37,15 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { ref } from 'vue';
-import UserInfo from '../components/UserInfo.vue';
-import { useActiveUser } from '/stores/userStore';
-const store = useActiveUser();
-
-let userImagePath = ref();
+import axios from "axios";
+import UserInfo from "../components/UserInfo.vue";
+import { useActiveUser } from "/stores/userStore";
 
 export default {
   data() {
     return {
       user: useActiveUser(),
-      id: sessionStorage.getItem('user_id'),
+      id: sessionStorage.getItem("user_id"),
       imageUrl: null,
     };
   },
@@ -66,38 +62,18 @@ export default {
       const file = fileInput.files[0];
 
       const formData = new FormData();
-      formData.append('image', file);
-      formData.append('id', this.id);
+      formData.append("image", file);
+      formData.append("id", this.id);
 
       axios
-        .post('/api/uploads/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+        .post("/api/uploads/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         })
-        .then((response) => {
-          console.log(response.data);
-          axios
-            .put(
-              '/api/user',
-              {
-                id: this.id,
-                label: 'image_path',
-                path: `/api/uploads/image/avatar${this.id}.jpg`,
-              },
-              { withCredentials: true }
-            )
-            .then((res) => {
-              console.log(res);
-              userImagePath = res.data[0].image_path;
-              console.log(userImagePath);
-              store.userImage = userImagePath;
-              location.reload();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+        .then(() => {
+          location.reload();
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
         });
     },
     deleteUser() {
@@ -115,7 +91,7 @@ export default {
           console.log(response);
         })
         .then(() => {
-          this.$router.push({ path: '/' });
+          this.$router.push({ path: "/" });
         })
         .catch((error) => {
           console.log(error);
@@ -124,15 +100,15 @@ export default {
   },
   mounted() {
     axios
-      .get(store.userImage, {
-        responseType: 'blob',
+      .get("/api/uploads/avatar", {
+        responseType: "blob",
       })
       .then((response) => {
         const url = URL.createObjectURL(new Blob([response.data]));
         this.imageUrl = url;
       })
       .catch((error) => {
-        console.error('Error vid hämtning av bild:', error);
+        console.error("Error vid hämtning av bild:", error);
       });
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="formContainer" @submit.prevent="submitForm">
+    <form ref="postForm" class="formContainer" @submit.prevent="submitForm">
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Svara på tråden</span>
@@ -23,6 +23,11 @@ export default {
   },
   methods: {
     submitForm() {
+      if (!this.postContent.trim()){
+        alert("Din post är tom. Skriv ett inlägg först.")
+        return;
+      }
+
       const postData = {
         topic_id: this.topicId,
         content: this.postContent
@@ -30,8 +35,9 @@ export default {
 
       axios.post('/api/postTopics', postData)
         .then(response => {
-          console.log(response.data);
+          this.$emit('postSubmitted', this.postContent);
           this.postContent = "";
+
         })
         .catch(error => {
           console.error('Error:', error);

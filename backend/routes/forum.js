@@ -12,9 +12,30 @@ client.connect();
 router.get("/", async (request, response) => {
   try {
     const page = parseInt(request.query.page) || 1;
-    const pageSize = 1000;
+    const pageSize = 10;
     const offset = Math.max(0, (page - 1) * pageSize);
-
+    const query = `
+    WITH LatestPosts AS (
+      SELECT
+        topics.*,
+        posts.*,
+        ROW_NUMBER() OVER (PARTITION BY topics.topic_id ORDER BY posts.created_at DESC) AS rn
+      FROM
+        topics
+      LEFT JOIN
+        posts ON topics.topic_id = posts.topic
+    )
+    SELECT
+      *
+    FROM
+      LatestPosts
+    WHERE
+      rn = 1
+    ORDER BY
+      LatestPosts.topic_id DESC
+    LIMIT
+      $1 OFFSET $2;`;
+    /*
     const query = `
       SELECT *
       FROM topics
@@ -22,8 +43,9 @@ router.get("/", async (request, response) => {
       ORDER BY topics.topic_id DESC
       LIMIT $1 OFFSET $2;
     `;
-
+*/
     const { rows } = await client.query(query, [pageSize, offset]);
+    console.log(rows);
     response.send(rows);
   } catch (error) {
     console.error("Error fetching topics:", error);

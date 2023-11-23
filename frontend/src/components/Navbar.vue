@@ -94,13 +94,13 @@
 </template>
 
 <script>
-import axios from "axios";
-import { state, socket } from "../socket";
-import { useMessageStore } from "../../stores/userStore";
-import { mapWritableState } from "pinia";
+import axios from 'axios';
+import { state, socket } from '../socket';
+import { useMessageStore } from '../../stores/messageStore';
+import { mapWritableState } from 'pinia';
 
 export default {
-  name: "Navbar",
+  name: 'Navbar',
 
   data() {
     return {};
@@ -108,7 +108,7 @@ export default {
 
   computed: {
     loggedIn() {
-      if (sessionStorage.getItem("user_id") !== null) {
+      if (sessionStorage.getItem('user_id') !== null) {
         return true;
       } else {
         return false;
@@ -121,39 +121,28 @@ export default {
       return state.connected;
     },
 
-    ...mapWritableState(useMessageStore, ["newMessage"]),
+    ...mapWritableState(useMessageStore, ['newMessage']),
   },
 
   mounted() {
-    console.log("STORE VALUE: ", this.newMessages);
-    socket.on("chat message", () => {
-      if (this.$route.path !== "/chat") {
+    socket.on('chat message', () => {
+      if (this.$route.path !== '/chat') {
         this.newMessage = true;
       }
     });
-  },
-
-  watch: {
-    newMessage() {
-      console.log("NEW MESSAGE: ", this.newMessage);
-    },
   },
 
   methods: {
     logout() {
       sessionStorage.clear();
 
-      axios("api/auth/logout")
+      axios('api/auth/logout')
         .then((response) => {
           console.log(response.data);
         })
         .then(() => {
-          this.$router.push("/login");
+          this.$router.push('/login');
         });
-    },
-
-    test() {
-      console.log(this.newMessage);
     },
   },
 };
