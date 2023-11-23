@@ -93,47 +93,48 @@
 </template>
 
 <script>
-import moment from 'moment'
-import axios from 'axios'
+import moment from 'moment';
+import axios from 'axios';
 
-import { socket, state } from '../socket'
-import { useMessageStore } from '../../stores/userStore'
-import { mapWritableState } from 'pinia'
+import { socket, state } from '../socket';
+import { useMessageStore } from '../../stores/userStore';
+import { mapWritableState } from 'pinia';
 
 export default {
   data() {
     return {
       message: '',
-    }
+    };
   },
 
   mounted() {
-    this.fetchLatestMessages()
+    this.fetchLatestMessages();
 
-    this.newMessage = false
+    this.newMessage = false;
 
     setTimeout(() => {
-      this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight
-    }, 100)
+      this.$refs.chatContainer.scrollTop =
+        this.$refs.chatContainer.scrollHeight;
+    }, 100);
 
-    this.scrollListener()
+    this.scrollListener();
   },
 
   computed: {
     loggedInUser() {
-      return sessionStorage.getItem('user_id')
+      return sessionStorage.getItem('user_id');
     },
 
     connected() {
-      return state.connected
+      return state.connected;
     },
 
     users() {
-      return state.users
+      return state.users;
     },
 
     messages() {
-      return state.messages
+      return state.messages;
     },
 
     ...mapWritableState(useMessageStore, ['newMessage']),
@@ -143,75 +144,75 @@ export default {
     scrollListener() {
       this.$refs.chatContainer.addEventListener('scroll', () => {
         if (this.$refs.chatContainer.scrollTop === 0) {
-          this.fetchNextMessages()
+          this.fetchNextMessages();
         }
-      })
+      });
     },
     scrollToBottom() {
       this.$nextTick(() => {
-        const chatContainer = this.$refs.chatContainer
+        const chatContainer = this.$refs.chatContainer;
 
         if (chatContainer) {
-          const scrollHeight = chatContainer.scrollHeight
-          const clientHeight = chatContainer.clientHeight
+          const scrollHeight = chatContainer.scrollHeight;
+          const clientHeight = chatContainer.clientHeight;
 
-          chatContainer.scrollTop = scrollHeight - clientHeight
+          chatContainer.scrollTop = scrollHeight - clientHeight;
         }
-      })
+      });
     },
 
     async sendMessage() {
       const response = await axios.post('/api/chat', {
         user_id: sessionStorage.getItem('user_id'),
         message: this.message,
-      })
-      console.log('First Message:', this.message)
+      });
+      console.log('First Message:', this.message);
       socket.emit('chat message', {
         message: this.message,
         username: response.data.user.username,
         timestamp: new Date(),
         user_id: response.data.user.user_id,
         image_path: response.data.user.image_path,
-      })
-      this.message = ''
+      });
+      this.message = '';
 
       setTimeout(() => {
-        this.scrollToBottom()
-      }, 50)
+        this.scrollToBottom();
+      }, 50);
     },
 
     getStatus(msg) {
       if (msg.user_id === parseInt(this.loggedInUser)) {
-        return 'Skickat'
+        return 'Skickat';
       } else {
-        return 'Mottaget'
+        return 'Mottaget';
       }
     },
 
     getTimeAgo(timestamp) {
-      return moment(timestamp).fromNow()
+      return moment(timestamp).fromNow();
     },
 
     async fetchLatestMessages() {
       try {
-        const response = await axios.get('/api/chat/latest')
+        const response = await axios.get('/api/chat/latest');
 
-        state.messages = response.data.messages
+        state.messages = response.data.messages;
       } catch (error) {
-        console.error('Error fetching latest messages:', error)
+        console.error('Error fetching latest messages:', error);
       }
     },
     async fetchNextMessages() {
       try {
-        const offset = this.messages.length
+        const offset = this.messages.length;
 
-        const response = await axios.get(`/api/chat/latest?offset=${offset}`)
-        console.log('Received Messages:', response.data.messages)
-        state.messages = [...response.data.messages, ...state.messages]
+        const response = await axios.get(`/api/chat/latest?offset=${offset}`);
+        console.log('Received Messages:', response.data.messages);
+        state.messages = [...response.data.messages, ...state.messages];
       } catch (error) {
-        console.error('Error fetching messages:', error)
+        console.error('Error fetching messages:', error);
       }
     },
   },
-}
+};
 </script>
