@@ -29,7 +29,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 const checkToken = async (req, res) => {
-  const { token } = req.body;
+  const token = req.cookies.token;
 
   if (!token) {
     return res
