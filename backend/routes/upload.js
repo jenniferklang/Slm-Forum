@@ -40,7 +40,6 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 });
 
 router.get('/avatar/:filename', (req, res) => {
-  console.log('REAADAS');
   try {
     const { filename } = req.params;
 
