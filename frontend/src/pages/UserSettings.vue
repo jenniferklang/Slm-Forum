@@ -81,7 +81,7 @@ export default {
               {
                 id: this.id,
                 label: 'image_path',
-                path: `/api/uploads/image/avatar${this.id}.jpg`,
+                path: `/api/uploads/avatar`,
               },
               { withCredentials: true }
             )

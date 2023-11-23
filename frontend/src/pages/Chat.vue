@@ -97,7 +97,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 import { socket, state } from '../socket';
-import { useMessageStore } from '../../stores/userStore';
+import { useMessageStore } from '../../stores/messageStore';
 import { mapWritableState } from 'pinia';
 
 export default {

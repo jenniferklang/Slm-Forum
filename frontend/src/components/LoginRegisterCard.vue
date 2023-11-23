@@ -123,10 +123,8 @@
 
 <script>
 import axios from 'axios';
-import { useActiveUser } from '/stores/userStore';
-import { ref } from 'vue';
-const store = useActiveUser();
-let user = ref();
+import { useActiveUser } from '../../stores/userStore';
+import { mapWritableState } from 'pinia';
 
 export default {
   name: 'LoginRegisterCard',
@@ -142,18 +140,27 @@ export default {
       modalTitle: '',
       modalMessage: '',
       privacyCheck: false,
+      fetchedUser: null,
     };
+  },
+
+  computed: {
+    ...mapWritableState(useActiveUser, [
+      'userId',
+      'userRealName',
+      'userMail',
+      'userName',
+      'userImage',
+    ]),
   },
 
   methods: {
     setUser() {
-      store.$patch({
-        userId: user.user_id,
-        userRealName: user.name,
-        userMail: user.mail,
-        userName: user.username,
-        userImage: user.image_path,
-      });
+      this.userId = this.fetchedUser.user_id;
+      this.userRealName = this.fetchedUser.name;
+      this.userMail = this.fetchedUser.mail;
+      this.userName = this.fetchedUser.username;
+      this.userImage = this.fetchedUser.image_path;
     },
     login() {
       axios
@@ -166,18 +173,17 @@ export default {
           { withCredentials: true }
         )
         .then((response) => {
-          console.log(response);
-          user = response.data.user;
-          sessionStorage.setItem('jwt', response.data.token);
-          this.setUser();
+          console.log(response.data);
+          this.fetchedUser = response.data.user;
         })
         .then(() => {
+          this.setUser();
           this.$router.push({ path: '/' });
         })
         .catch((error) => {
           console.log(error);
           this.modalTitle = 'Nu har vi stött på ett problem!';
-          this.modalMessage = error.response.data.message;
+          this.modalMessage = error.data.message;
           this.$refs.error_modal.showModal();
         });
     },
