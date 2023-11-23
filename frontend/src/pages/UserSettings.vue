@@ -4,7 +4,7 @@
       <div class="flex align-center">
         <img
           v-if="imageUrl"
-          class="w-16 h-16 rounded-full m-5"
+          class="w-16 h-16 rounded-full m-5 object-cover"
           :src="imageUrl"
           alt="Test"
         />
@@ -69,7 +69,9 @@ export default {
         .post("/api/uploads/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then(() => {
+        .then((response) => {
+          console.log(response.data);
+          this.user.userImage = response.data;
           location.reload();
         })
         .catch((error) => {
@@ -100,7 +102,7 @@ export default {
   },
   mounted() {
     axios
-      .get("/api/uploads/avatar", {
+      .get(`/api/uploads/${this.user.userImage}`, {
         responseType: "blob",
       })
       .then((response) => {
