@@ -1,11 +1,16 @@
 <template>
+  <div class="buttonContainer">
+  <router-link to="/forum">
+        <button class="btn mt-4">Tillbaka till forumet</button>
+      </router-link>
+    </div>
   <div class="forumContainer">
-    <div class="created">Startad av: {{ topic.topic_created_by }} Datum {{ formatDate(topic.topic_created_at) }}</div>
+    <div class="created">Startad av: {{ topic.topic_created_by }}  {{ formatDate(topic.topic_created_at) }}</div>
     <h1>{{ topic.topic_title }} </h1>
 
     <div v-for="(post, index) in sortedPosts" :key="index">
       <div class="postContainer">
-        <div class="created"> Av: {{ post.post_created_by ? post.post_created_by : 'dig' }} Datum {{ post.post_created_at ? formatDate(post.post_created_at) : 'precis nu' }}</div>
+        <div class="created"> Av: {{ post.post_created_by ? post.post_created_by : 'Dig' }}  {{ post.post_created_at ? formatDate(post.post_created_at) : 'precis nu' }}</div>
       <p>{{ post.post_content }} </p>
     </div>
 
@@ -38,7 +43,6 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get(`/api/thread/${parseInt(this.$route.params.topicId)}`);
-        console.log(response)
         this.topic = response.data[0];
         this.posts = response.data;
       } catch (error) {
@@ -73,6 +77,10 @@ export default {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+  .buttonContainer{
+    max-width: 800px;
+    margin: 20px auto;
+  }
 
   h1 {
     font-size: 24px;
@@ -106,4 +114,5 @@ export default {
   .createPostContainer {
     margin-top: 20px;
   }
+
 </style>
