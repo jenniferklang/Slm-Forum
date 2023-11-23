@@ -37,15 +37,15 @@
 </template>
 
 <script>
-import axios from "axios";
-import UserInfo from "../components/UserInfo.vue";
-import { useActiveUser } from "/stores/userStore";
+import axios from 'axios';
+import UserInfo from '../components/UserInfo.vue';
+import { useActiveUser } from '/stores/userStore';
 
 export default {
   data() {
     return {
       user: useActiveUser(),
-      id: sessionStorage.getItem("user_id"),
+      id: sessionStorage.getItem('user_id'),
       imageUrl: null,
     };
   },
@@ -62,12 +62,12 @@ export default {
       const file = fileInput.files[0];
 
       const formData = new FormData();
-      formData.append("image", file);
-      formData.append("id", this.id);
+      formData.append('image', file);
+      formData.append('id', this.id);
 
       axios
-        .post("/api/uploads/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        .post('/api/uploads/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) => {
           console.log(response.data);
@@ -93,7 +93,7 @@ export default {
           console.log(response);
         })
         .then(() => {
-          this.$router.push({ path: "/" });
+          this.$router.push({ path: '/' });
         })
         .catch((error) => {
           console.log(error);
@@ -102,15 +102,15 @@ export default {
   },
   mounted() {
     axios
-      .get(`/api/uploads/${this.user.userImage}`, {
-        responseType: "blob",
+      .get(`${this.user.userImage}`, {
+        responseType: 'blob',
       })
       .then((response) => {
         const url = URL.createObjectURL(new Blob([response.data]));
         this.imageUrl = url;
       })
       .catch((error) => {
-        console.error("Error vid hämtning av bild:", error);
+        console.error('Error vid hämtning av bild:', error);
       });
   },
 };

@@ -26,18 +26,21 @@ router.post('/upload', upload.single('image'), async (req, res) => {
   const { id } = req.body;
 
   const fileName = req.file.originalname;
+  console.log(fileName);
   await sharp(req.file.buffer)
     .resize({ width: 100 })
-    .toFile(`uploads/${fileName}`);
+    .toFile(`uploads/${req.file.originalname}`);
 
   await client.query('UPDATE users SET image_path = $1 WHERE user_id = $2', [
-    `/api/uploads/${fileName}`,
+    `/api/uploads/avatar/${req.file.originalname}`,
     id,
   ]);
+
   res.send(fileName);
 });
 
-router.get('/:filename', (req, res) => {
+router.get('/avatar/:filename', (req, res) => {
+  console.log('REAADAS');
   try {
     const { filename } = req.params;
 
