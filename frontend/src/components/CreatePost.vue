@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="formContainer" @submit.prevent="submitForm">
+    <form ref="postForm" class="formContainer" @submit.prevent="submitForm">
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Svara på tråden</span>
@@ -30,8 +30,9 @@ export default {
 
       axios.post('/api/postTopics', postData)
         .then(response => {
-          console.log(response.data);
+          this.$emit('postSubmitted', this.postContent);
           this.postContent = "";
+
         })
         .catch(error => {
           console.error('Error:', error);

@@ -28,7 +28,7 @@
           <!-- <li><router-link to="/chat">Chat</router-link></li> -->
           <li><router-link to="/forum">Forum</router-link></li>
           <li><router-link to="/chat">Chat</router-link></li>
-          <li><router-link to="/policy">Privacy</router-link></li>
+          <li><router-link to="/policy">Integritetspolicy</router-link></li>
           <li><router-link to="/user">Inställningar</router-link></li>
           <li v-if="loggedIn">
             <router-link to="/login" @click="logout">Logga ut</router-link>
@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="navbar-center">
-      <a class="btn btn-ghost text-xl" @click="test">daisyUI</a>
+      <h1 class="text-xl">SLM</h1>
     </div>
     <div class="navbar-end">
       <!-- <button class="btn btn-ghost btn-circle">
@@ -94,13 +94,13 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { state, socket } from '../socket';
-import { useMessageStore } from '../../stores/userStore';
-import { mapWritableState } from 'pinia';
+import axios from "axios";
+import { state, socket } from "../socket";
+import { useMessageStore } from "../../stores/userStore";
+import { mapWritableState } from "pinia";
 
 export default {
-  name: 'Navbar',
+  name: "Navbar",
 
   data() {
     return {};
@@ -108,7 +108,7 @@ export default {
 
   computed: {
     loggedIn() {
-      if (sessionStorage.getItem('user_id') !== null) {
+      if (sessionStorage.getItem("user_id") !== null) {
         return true;
       } else {
         return false;
@@ -121,13 +121,13 @@ export default {
       return state.connected;
     },
 
-    ...mapWritableState(useMessageStore, ['newMessage']),
+    ...mapWritableState(useMessageStore, ["newMessage"]),
   },
 
   mounted() {
-    console.log('STORE VALUE: ', this.newMessages);
-    socket.on('chat message', () => {
-      if (this.$route.path !== '/chat') {
+    console.log("STORE VALUE: ", this.newMessages);
+    socket.on("chat message", () => {
+      if (this.$route.path !== "/chat") {
         this.newMessage = true;
       }
     });
@@ -135,7 +135,7 @@ export default {
 
   watch: {
     newMessage() {
-      console.log('NEW MESSAGE: ', this.newMessage);
+      console.log("NEW MESSAGE: ", this.newMessage);
     },
   },
 
@@ -143,12 +143,12 @@ export default {
     logout() {
       sessionStorage.clear();
 
-      axios('api/auth/logout')
+      axios("api/auth/logout")
         .then((response) => {
           console.log(response.data);
         })
         .then(() => {
-          this.$router.push('/login');
+          this.$router.push("/login");
         });
     },
 

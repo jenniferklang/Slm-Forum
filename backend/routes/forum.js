@@ -12,7 +12,7 @@ client.connect();
 router.get("/", async (request, response) => {
   try {
     const page = parseInt(request.query.page) || 1;
-    const pageSize = 1000;
+    const pageSize = 10;
     const offset = Math.max(0, (page - 1) * pageSize);
 
     const query = `

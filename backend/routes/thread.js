@@ -35,7 +35,6 @@ router.get('/:topicId', async (request, response) => {
         t.topic_id = $1;
     `;
     const { rows } = await client.query(query, [topicId]);
-
     if (rows.length === 0) {
       response.status(404).send('Topic not found');
     } else {
