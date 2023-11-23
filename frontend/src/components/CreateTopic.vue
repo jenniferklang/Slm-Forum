@@ -40,9 +40,10 @@ export default {
 
       axios.post('/api/postTopics', postData)
         .then(response => {
-          console.log(response.data);
+          const newTopicId = response.data.topic.topic_id
           this.topicTitle = "";
           this.postContent = "";
+          this.$router.push(`/followThread/${newTopicId}`);
         })
         .catch(error => {
           console.error('Error:', error);
