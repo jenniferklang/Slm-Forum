@@ -11,7 +11,6 @@ const pinia = createPinia();
 watch(
   pinia.state,
   (state) => {
-    console.log(state);
     if (state.activeUser) {
       localStorage.setItem("activeUser", JSON.stringify(state.activeUser));
     }

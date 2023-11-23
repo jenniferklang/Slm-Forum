@@ -25,19 +25,19 @@ const upload = multer({ storage: storage, fileFilter: filter });
 router.post('/upload', upload.single('image'), async (req, res) => {
   const { id } = req.body;
 
+  const fileName = req.file.originalname;
   await sharp(req.file.buffer)
     .resize({ width: 100 })
-    .toFile(`uploads/${req.file.originalname}`);
+    .toFile(`uploads/${fileName}`);
 
   await client.query('UPDATE users SET image_path = $1 WHERE user_id = $2', [
-    `/api/uploads/avatar/${req.file.originalname}`,
+    `/api/uploads/${fileName}`,
     id,
   ]);
-
-  res.send('Uppladdad!');
+  res.send(fileName);
 });
 
-router.get('/avatar/:filename', (req, res) => {
+router.get('/:filename', (req, res) => {
   try {
     const { filename } = req.params;
 
