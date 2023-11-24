@@ -24,7 +24,6 @@ const routes = [
   {
     path: '/policy',
     component: () => import('./pages/PrivacyPolicy.vue'),
-    meta: { requiresAuth: true },
   },
   {
     path: '/posttopic',
